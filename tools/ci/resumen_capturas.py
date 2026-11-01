@@ -33,11 +33,21 @@ def imprimir_mapa(imagen, columnas):
     filas = round(columnas * imagen.height / imagen.width / 2)
     pequena = imagen.resize((columnas, filas), Image.BOX)
     conteo: dict[str, int] = {}
+    sumas: dict[str, list] = {}
     for y in range(filas):
-        fila = "".join(clasificar(pequena.getpixel((x, y))) for x in range(columnas))
-        for letra in fila:
+        fila = ""
+        for x in range(columnas):
+            pixel = pequena.getpixel((x, y))
+            letra = clasificar(pixel)
+            fila += letra
             conteo[letra] = conteo.get(letra, 0) + 1
+            suma = sumas.setdefault(letra, [0, 0, 0])
+            for i in range(3):
+                suma[i] += pixel[i]
         print("  " + fila)
+    # Color medio real de cada clase (para ajustar la iluminación con números).
+    medias = {k: tuple(round(c / conteo[k]) for c in v) for k, v in sumas.items()}
+    print("  color medio por clase:", dict(sorted(medias.items())))
     return conteo, columnas * filas
 
 
