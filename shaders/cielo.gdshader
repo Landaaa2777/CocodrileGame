@@ -13,7 +13,8 @@ uniform float fuerza_lunares : hint_range(0.0, 1.0) = 0.08;
 
 void sky() {
 	vec3 d = normalize(EYEDIR);
-	float t = smoothstep(-0.45, 0.6, d.y);
+	// La cámara mira hacia abajo: el degradado se reparte por debajo del horizonte.
+	float t = smoothstep(-0.75, 0.12, d.y);
 	vec3 color = mix(color_abajo.rgb, color_arriba.rgb, t);
 
 	vec3 c = normalize(centro_rayos);

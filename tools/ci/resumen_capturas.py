@@ -29,20 +29,32 @@ def clasificar(pixel):
     return mejor if distancia < 9000 else "·"
 
 
+def imprimir_mapa(imagen, columnas):
+    filas = round(columnas * imagen.height / imagen.width / 2)
+    pequena = imagen.resize((columnas, filas), Image.BOX)
+    conteo: dict[str, int] = {}
+    for y in range(filas):
+        fila = "".join(clasificar(pequena.getpixel((x, y))) for x in range(columnas))
+        for letra in fila:
+            conteo[letra] = conteo.get(letra, 0) + 1
+        print("  " + fila)
+    return conteo, columnas * filas
+
+
 def main() -> int:
     fallo = False
     for ruta in sorted(Path(sys.argv[1]).glob("[0-9]*.png")):
         imagen = Image.open(ruta).convert("RGB")
-        filas = round(COLUMNAS * imagen.height / imagen.width / 2)
-        pequena = imagen.resize((COLUMNAS, filas), Image.BOX)
-        conteo: dict[str, int] = {}
         print(f"\n=== {ruta.name} {imagen.size}")
-        for y in range(filas):
-            fila = "".join(clasificar(pequena.getpixel((x, y))) for x in range(COLUMNAS))
-            for letra in fila:
-                conteo[letra] = conteo.get(letra, 0) + 1
-            print("  " + fila)
-        total = COLUMNAS * filas
+        conteo, total = imprimir_mapa(imagen, COLUMNAS)
+        luminancia = sum(imagen.convert("L").getdata()) / (imagen.width * imagen.height)
+        print(f"  luminancia media: {luminancia:.0f}/255")
+        if "partida" in ruta.name:
+            # Zoom al cocodrilo para revisar ojos, boca y dientes.
+            ancho, alto = imagen.size
+            recorte = imagen.crop((int(ancho * 0.12), int(alto * 0.28), int(ancho * 0.88), int(alto * 0.78)))
+            print("  --- zoom")
+            imprimir_mapa(recorte, 72)
         porcentajes = {k: round(100 * v / total, 1) for k, v in sorted(conteo.items(), key=lambda kv: -kv[1])}
         print("  colores %:", porcentajes)
         if porcentajes.get("K", 0) > 60:
