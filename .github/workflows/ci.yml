@@ -94,12 +94,8 @@ jobs:
       - name: Hoja de contactos
         run: |
           pip install -q pillow
+          python3 tools/ci/resumen_capturas.py build/capturas
           python3 tools/ci/hoja_capturas.py build/capturas build/capturas/hoja.jpg
-          # La hoja también va en el registro (base64) para poder revisarla sin descargar artefactos.
-          echo "HOJA_BASE64_INICIO"
-          base64 -w 0 build/capturas/hoja.jpg
-          echo
-          echo "HOJA_BASE64_FIN"
       - name: Artefacto con las capturas
         uses: actions/upload-artifact@v4
         with:
