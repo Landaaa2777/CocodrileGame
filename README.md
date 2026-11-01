@@ -33,7 +33,10 @@ con su shader toon.</sub></p>
    2. El **invitado** pulsa *Unirse*, pega el código (*Pegar*), pulsa *Generar respuesta*, luego
       *Copiar respuesta*, y se la devuelve al anfitrión.
    3. El **anfitrión** pega la respuesta y pulsa *Conectar*.
-   4. El estado pasa por **«Esperando al rival...» → «Conectando...» → «Conectado»** y empieza la partida.
+   4. El anfitrión ve **«Esperando al rival...» → «Conectando...» → «¡Conectado!»**. El invitado ve
+      «Esperando al rival...» hasta que el anfitrión pega su respuesta y luego «¡Conectado!». Entonces
+      empieza la partida. Conviene devolver la respuesta en menos de un minuto: con el tiempo, los
+      routers cierran el «agujero» de red que abrió el invitado.
 3. **Partida.** El indicador de arriba muestra de quién es el turno (verde: tuyo; coral: del
    rival). Toca un diente y suéltalo encima para presionarlo. Si es seguro, se pone gris y sale
    «¡Uf, salvado!». Si es el mordedor... **¡ÑAM!** La música se vuelve más tensa conforme quedan
