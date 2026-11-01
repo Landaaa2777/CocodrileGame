@@ -130,6 +130,15 @@ func nombre_implementacion() -> String:
 	return "addon webrtc-native"
 
 
+## Estados internos de WebRTC en texto (para depurar y para las pruebas).
+func diagnostico() -> String:
+	if _peer == null:
+		return "sin conexión (estado %d)" % estado
+	return "estado=%d conexion=%d recoleccion=%d senalizacion=%d canal=%d candidatos=%d" % [
+		estado, _peer.get_connection_state(), _peer.get_gathering_state(), _peer.get_signaling_state(),
+		_canal.get_ready_state() if _canal != null else -1, _candidatos_locales.size()]
+
+
 func esta_conectado() -> bool:
 	return estado == Estado.CONECTADO and _canal != null \
 		and _canal.get_ready_state() == WebRTCDataChannel.STATE_OPEN

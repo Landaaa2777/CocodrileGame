@@ -79,9 +79,8 @@ func _ready() -> void:
 func _input(evento: InputEvent) -> void:
 	if desbloqueado:
 		return
-	var es_interaccion := (evento is InputEventMouseButton and evento.pressed) \
-		or (evento is InputEventScreenTouch and evento.pressed) \
-		or (evento is InputEventKey and evento.pressed)
+	var es_interaccion: bool = evento.is_pressed() and (evento is InputEventMouseButton \
+		or evento is InputEventScreenTouch or evento is InputEventKey)
 	if es_interaccion:
 		desbloqueado = true
 		audio_desbloqueado.emit()

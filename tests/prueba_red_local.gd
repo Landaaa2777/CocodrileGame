@@ -30,19 +30,40 @@ func _initialize() -> void:
 	_invitado.desconectado.connect(func(motivo: String) -> void: _fallar("invitado: " + motivo))
 	_anfitrion.codigo_generado.connect(func(codigo: String) -> void:
 		print("Código del anfitrión: %d caracteres" % codigo.length())
+		_describir_codigo(codigo)
 		_invitado.unirse(codigo))
 	_invitado.codigo_generado.connect(func(codigo: String) -> void:
 		print("Respuesta del invitado: %d caracteres" % codigo.length())
+		_describir_codigo(codigo)
 		_anfitrion.aceptar_respuesta(codigo))
 	_anfitrion.conectado.connect(func() -> void:
 		print("Anfitrión conectado; enviando jugada de prueba")
 		_anfitrion.enviar(ProtocoloScript.crear(ProtocoloScript.JUGADA, {"diente": DIENTE_DE_PRUEBA})))
 	_invitado.establecer_receptor(_al_recibir)
+	_invitado.conectado.connect(func() -> void: print("Invitado conectado"))
+	# Diagnóstico periódico de ambos pares.
+	var reloj := Timer.new()
+	reloj.wait_time = 2.0
+	reloj.autostart = true
+	reloj.timeout.connect(func() -> void:
+		print("  anfitrión: ", _anfitrion.diagnostico())
+		print("  invitado:  ", _invitado.diagnostico()))
+	root.add_child(reloj)
 	create_timer(TIEMPO_LIMITE_S).timeout.connect(func() -> void:
 		_fallar("tiempo agotado (estados %d / %d)" % [_anfitrion.estado, _invitado.estado]))
 
 	if not _anfitrion.crear_partida():
 		_fallar("no se pudo crear la partida (¿falta addons/webrtc?)")
+
+
+func _describir_codigo(codigo: String) -> void:
+	var datos: Dictionary = RedScript.decodificar_codigo(codigo)
+	for linea: String in String(datos.get("sdp", "")).split("\n"):
+		if linea.begins_with("a=setup") or linea.begins_with("m=") or linea.begins_with("a=sctp") \
+				or linea.begins_with("a=fingerprint"):
+			print("    ", linea.strip_edges())
+	for candidato: Dictionary in datos.get("candidatos", []):
+		print("    candidato ", candidato["media"], " ", candidato["indice"], " ", candidato["nombre"])
 
 
 func _al_recibir(mensaje: Dictionary) -> void:
