@@ -80,6 +80,10 @@ godot --headless --path . --script res://tests/prueba_red_local.gd   # 2 pares W
 python3 tools/validar_escenas.py                                     # validación estática sin Godot
 ```
 
+El CI de GitHub Actions ejecuta todo esto con **Godot 4.7.2 real**. También renderiza
+capturas de cada pantalla (artefacto `capturas`) y exporta la web y el APK. El detalle está en
+[docs/FASE0.md](docs/FASE0.md).
+
 `tests/test_reglas_juego.gd` comprueba que los turnos se alternan, que no se puede jugar fuera
 de turno ni repetir un diente, y que el diente mordedor siempre está entre los válidos (con 500
 semillas).

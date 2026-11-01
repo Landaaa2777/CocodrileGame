@@ -41,15 +41,22 @@ Sí están disponibles PyPI y npm. Por eso:
   No hay ningún asset externo (ver `CREDITS.md`).
 - El addon se instala con `tools/instalar_webrtc.sh` en tu equipo, y el CI de GitHub Actions lo descarga solo.
 
-## Qué validé aquí y qué falta validar en tu equipo
+## Qué se validó y dónde
 
-| Se validó en este entorno | Requiere tu equipo o el CI |
-|---|---|
-| Sintaxis de todos los `.gd` con `gdparse` y `gdlint` (gdtoolkit 4.x) | Abrir el proyecto en el editor de Godot 4.7 (importación de recursos) |
-| Coherencia de `.tscn` y `.tres` (ids, rutas y nodos padre) con `tools/validar_escenas.py` | Ejecutar las pruebas: `godot --headless --script res://tests/ejecutar_pruebas.gd` |
-| Generación de texturas y WAV, y vista previa 3D del cocodrilo (three.js + Chromium) | El aspecto final con el shader toon de Godot |
-| | Exportar el APK (Android SDK y JDK 17) y probarlo en el S24 |
-| | La conexión WebRTC real entre dos dispositivos |
+| Comprobación | Dónde | Estado |
+|---|---|---|
+| Sintaxis y estilo de todos los `.gd` (gdtoolkit) | Este entorno y CI | ✔ |
+| Coherencia de `.tscn` y `.tres` (ids, rutas, nodos, `$`/`%`, uniforms) con `tools/validar_escenas.py` | Este entorno y CI | ✔ |
+| Importación del proyecto con **Godot 4.7.2** | CI | ✔ |
+| Pruebas unitarias (turnos, mordedor válido, código de conexión, escena del cocodrilo) | CI con Godot real | ✔ 15/15 |
+| **Negociación WebRTC real**: dos pares con el addon webrtc-native se intercambian los códigos (con 3 s de «copiar/pegar») y se envían una jugada | CI con Godot real | ✔ |
+| Pruebas de humo: cada escena se abre y la partida se juega sola (`--autojugar`) sin errores de script | CI con Godot real | ✔ |
+| Render real (Compatibility/OpenGL con Mesa): capturas de menú, conexión, partida y resultados | CI (job «Capturas») | ✔ (artefacto `capturas`) |
+| Exportación **Web** (`index.html`, `.wasm`, `.pck`) | CI | ✔ |
+| Exportación **APK** de depuración arm64-v8a con la biblioteca de webrtc-native dentro | CI | ✔ (artefacto `cocodrilo-dentista-apk`) |
+| Jugar en el Samsung S24 y entre dos dispositivos reales (redes móviles, NAT, TURN) | Tu equipo | Pendiente |
+| Publicación en GitHub Pages (requiere activar Pages y fusionar en la rama principal) | Tu repositorio | Pendiente |
 
-El workflow `.github/workflows/ci.yml` ejecuta en GitHub Actions las pruebas
-con Godot real, exporta la versión web y el APK de depuración, y publica la web en GitHub Pages.
+Dos fallos reales los detectó el CI con Godot y ya están corregidos: Godot 4.7.2 no
+podía inferir un tipo en `audio.gd`, y el anfitrión rechazaba la respuesta del invitado
+porque `STATE_CONNECTING` llega antes de recibir la respuesta.
