@@ -22,6 +22,7 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 IGNORAR = {".godot", ".git", "node_modules", "addons", "build"}
+SALIDAS_GENERADAS = ("res://build/",)
 problemas: list[str] = []
 
 
@@ -178,6 +179,8 @@ def validar_rutas_res() -> None:
     for ruta in list(archivos(".gd", ".gdshader")) + [RAIZ / "project.godot"]:
         for m in RE_RES.finditer(ruta.read_text(encoding="utf-8")):
             destino = m.group(1).lstrip("*")
+            if destino.startswith(SALIDAS_GENERADAS):
+                continue  # carpetas de salida que se crean al ejecutar
             if destino.endswith("/"):
                 if not res_a_ruta(destino).is_dir():
                     problemas.append(f"{ruta.name}: no existe la carpeta {destino}")
