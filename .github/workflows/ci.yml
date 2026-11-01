@@ -67,6 +67,45 @@ jobs:
           name: registros-pruebas
           path: "*.txt"
 
+  capturas:
+    name: Capturas con render real
+    needs: [estatico]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Caché de Godot
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/godot-ci
+          key: godot-${{ env.GODOT_VERSION }}-${{ env.GODOT_ESTADO }}
+      - name: Instalar Godot
+        run: bash tools/ci/instalar_godot.sh
+      - name: Dependencias de render (Xvfb + Mesa)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglx-mesa0 > /dev/null
+      - name: Importar el proyecto
+        run: godot --headless --path . --import
+      - name: Renderizar capturas
+        run: |
+          xvfb-run -a -s "-screen 0 1280x1024x24" godot --path . --rendering-driver opengl3 \
+            --resolution 405x720 --script res://tests/capturar_pantallas.gd 2>&1 | tee capturas.txt
+          ls -la build/capturas
+      - name: Hoja de contactos
+        run: |
+          pip install -q pillow
+          python3 tools/ci/hoja_capturas.py build/capturas build/capturas/hoja.jpg
+          # La hoja también va en el registro (base64) para poder revisarla sin descargar artefactos.
+          echo "HOJA_BASE64_INICIO"
+          base64 -w 0 build/capturas/hoja.jpg
+          echo
+          echo "HOJA_BASE64_FIN"
+      - name: Artefacto con las capturas
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas
+          path: build/capturas
+
   web:
     name: Exportar Web
     needs: [estatico]
