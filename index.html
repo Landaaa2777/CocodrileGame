@@ -1,0 +1,1790 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ascend Glow Up</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="ASCEND: comunidad de mejora personal. Rutinas de piel, pelo, físico y estilo, glow-ups reales y un reto diario de hábitos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: forum app shell. Glass top bar, compact hero band with the Glow Score ring, then three columns (categorías · foro · reto y ranking) that collapse to one. Single dark look, lit like a photo studio: violet key light left, cyan rim light right. */
+:root {
+  --bg: #09090E;
+  --surface: #111118;
+  --surface-2: #181821;
+  --line: #24242F;
+  --fg: #ECEAF4;
+  --muted: #8F8CA4;
+  --violet: #9D7CFF;
+  --cyan: #45D9F0;
+  --good: #5BE08F;
+  --amber: #F5B84A;
+  --scrim: rgba(4, 4, 9, .66);
+
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --r-lg: 20px;
+  --r-md: 14px;
+  --r-sm: 10px;
+  --header-h: 64px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 128px);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 15px/1.55 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 60;
+  background: var(--bg);
+}
+img { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 6px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Studio light behind everything */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(640px 420px at 6% -8%, color-mix(in oklab, var(--violet) 20%, transparent), transparent 70%),
+    radial-gradient(560px 380px at 98% 2%, color-mix(in oklab, var(--cyan) 12%, transparent), transparent 70%);
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  background: color-mix(in oklab, var(--bg) 74%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-in {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px;
+  min-height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 17px/1 var(--font-display);
+  letter-spacing: .08em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.logo-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(140deg, var(--violet), var(--cyan));
+  box-shadow: 0 0 18px -2px color-mix(in oklab, var(--violet) 70%, transparent);
+  position: relative;
+}
+.logo-mark::after {
+  content: "";
+  position: absolute;
+  inset: 5px 6px;
+  border-left: 2px solid var(--bg);
+  border-top: 2px solid var(--bg);
+  transform: rotate(45deg) translate(2px, 2px);
+}
+.mainnav { display: flex; gap: 4px; }
+.mainnav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  transition: color .15s, background .15s;
+}
+.mainnav a:hover { color: var(--fg); background: var(--surface-2); }
+.mainnav a[aria-current="page"] { color: var(--fg); background: var(--surface-2); }
+
+.search {
+  margin-left: auto;
+  flex: 1 1 320px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 8px 0 14px;
+  color: var(--muted);
+  transition: border-color .15s;
+}
+.search:focus-within { border-color: color-mix(in oklab, var(--violet) 60%, var(--line)); }
+.search input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: 0;
+  padding: 9px 0;
+  color: var(--fg);
+}
+.search input::placeholder { color: var(--muted); }
+.search kbd {
+  font: 500 11px/1 var(--font-mono);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 7px;
+  color: var(--muted);
+}
+.top-actions { display: flex; align-items: center; gap: 10px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--fg);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform .15s, box-shadow .2s, background .15s, border-color .15s;
+}
+.btn:hover { border-color: color-mix(in oklab, var(--fg) 25%, var(--line)); }
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: transparent;
+}
+.btn-primary:hover {
+  border-color: transparent;
+  box-shadow: -6px 0 22px -6px color-mix(in oklab, var(--violet) 80%, transparent), 6px 0 22px -6px color-mix(in oklab, var(--cyan) 80%, transparent);
+}
+.btn-icon { padding: 10px; }
+.btn svg { width: 16px; height: 16px; }
+
+.me {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  font: 600 12px/1 var(--font-body);
+  color: var(--muted);
+}
+.me svg { width: 18px; height: 18px; }
+.me.has-profile { color: #fff; border-color: transparent; }
+
+/* ---------- Page wrapper ---------- */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 72px;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 48px;
+  align-items: center;
+  padding-block: 56px 48px;
+}
+.eyebrow {
+  margin: 0;
+  font: 500 12px/1.4 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--good);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--good) 20%, transparent);
+}
+.hero h1 {
+  margin: 16px 0 18px;
+  font: 700 clamp(34px, 5.4vw, 64px)/1.02 var(--font-display);
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.hero h1 span { color: var(--muted); }
+.lede {
+  margin: 0;
+  max-width: 54ch;
+  font-size: 17px;
+  color: var(--muted);
+}
+.lede strong { color: var(--fg); font-weight: 500; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.hero-stats {
+  list-style: none;
+  margin: 36px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 36px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.hero-stats b {
+  display: block;
+  font: 500 20px/1.2 var(--font-mono);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one lit object: Glow Score card with a rim light */
+.score-card {
+  position: relative;
+  border-radius: 26px;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  padding: 28px;
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  text-align: center;
+  box-shadow:
+    -28px -12px 70px -34px color-mix(in oklab, var(--violet) 90%, transparent),
+    28px 14px 70px -34px color-mix(in oklab, var(--cyan) 80%, transparent);
+}
+.score-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(140deg, var(--violet), transparent 38%, transparent 62%, var(--cyan));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.score-label {
+  margin: 0;
+  font: 500 12px/1 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ring {
+  position: relative;
+  width: 188px;
+  height: 188px;
+  max-width: 100%;
+}
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.ring .track { stroke: var(--line); }
+.ring .arc { stroke: url(#rimGrad); opacity: 0; transition: opacity .35s ease; }
+.ring .arc.on { opacity: 1; filter: drop-shadow(0 0 6px color-mix(in oklab, var(--violet) 60%, transparent)); }
+.ring stop.s1 { stop-color: var(--violet); }
+.ring stop.s2 { stop-color: var(--cyan); }
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+}
+.ring-num {
+  font: 700 48px/1 var(--font-display);
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+.ring-of { font: 500 12px/1 var(--font-mono); color: var(--muted); }
+.score-msg { margin: 0; color: var(--muted); font-size: 14px; max-width: 30ch; }
+.score-msg b { color: var(--fg); font-weight: 500; }
+.score-link {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--fg);
+  border-bottom: 1px solid color-mix(in oklab, var(--cyan) 60%, transparent);
+  padding-bottom: 2px;
+}
+
+/* ---------- Three-column layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 316px;
+  gap: 28px;
+  align-items: start;
+}
+.layout > * { min-width: 0; }
+
+.side-label {
+  margin: 0 0 10px;
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-left: 12px;
+}
+.catnav {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + var(--header-h) + 20px);
+}
+.cat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.cat-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background .15s, color .15s;
+}
+.cat-btn:hover { background: var(--surface); color: var(--fg); }
+.cat-btn[aria-pressed="true"] { background: var(--surface-2); color: var(--fg); }
+.cat-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  background: hsl(var(--h) 75% 66%);
+  flex: none;
+}
+.cat-btn .count { margin-left: auto; font: 400 12px/1 var(--font-mono); color: var(--muted); }
+.rules {
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  color: var(--muted);
+}
+.rules h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--fg); }
+.rules ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+/* ---------- Feed ---------- */
+.feed-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.feed-head h2 { margin: 0; font: 700 22px/1.2 var(--font-display); letter-spacing: -.01em; }
+.feed-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.feed-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tabs {
+  display: inline-flex;
+  padding: 4px;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.tab {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  transition: background .15s, color .15s;
+}
+.tab:hover { color: var(--fg); }
+.tab[aria-selected="true"] { background: var(--surface-2); color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); }
+
+.filter-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.filter-note button {
+  border: 0;
+  background: none;
+  color: var(--cyan);
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+}
+
+.composer {
+  margin-bottom: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  display: grid;
+  gap: 14px;
+}
+.composer h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.composer-row { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 12px; }
+.field { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 12px;
+  color: var(--fg);
+  font-size: 15px;
+  transition: border-color .15s;
+}
+.field textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 0;
+  border-color: color-mix(in oklab, var(--violet) 70%, var(--line));
+}
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.hint { margin: 0; font-size: 12px; color: var(--muted); }
+
+.threads {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: color-mix(in oklab, var(--surface) 82%, transparent);
+  overflow: hidden;
+}
+.thread {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 20px;
+  border-top: 1px solid var(--line);
+  transition: background .15s;
+}
+.thread:first-child { border-top: 0; }
+.thread:has(.thumb) { grid-template-columns: 48px minmax(0, 1fr) auto; }
+.thread:hover { background: color-mix(in oklab, var(--surface-2) 70%, transparent); }
+.thread.is-new { animation: arrive 1.2s ease; }
+@keyframes arrive { from { background: color-mix(in oklab, var(--violet) 16%, transparent); } }
+
+.vote { display: grid; justify-items: center; align-content: start; gap: 6px; }
+.vote-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s, transform .15s;
+}
+.vote-btn svg { width: 16px; height: 16px; }
+.vote-btn:hover { color: var(--fg); border-color: color-mix(in oklab, var(--fg) 25%, var(--line)); }
+.vote-btn[aria-pressed="true"] {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(140deg, var(--violet), color-mix(in oklab, var(--violet) 40%, var(--cyan)));
+}
+.vote-btn[aria-pressed="true"]:active { transform: scale(.94); }
+.vote-n { font-size: 13px; color: var(--fg); }
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+.author { color: var(--fg); font-weight: 500; }
+.av {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font: 600 10px/1 var(--font-body);
+  letter-spacing: .02em;
+  color: #fff;
+  background: linear-gradient(135deg, hsl(var(--h) 70% 58%), hsl(calc(var(--h) + 40) 65% 38%));
+}
+.av.lg { width: 36px; height: 36px; font-size: 13px; }
+.streak, .pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 500 11px/1 var(--font-mono);
+  padding: 4px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+.streak { color: var(--amber); }
+.streak svg, .pin svg { width: 11px; height: 11px; }
+.pin { color: var(--cyan); }
+.sep { opacity: .5; }
+
+.t-title { margin: 8px 0 6px; font-size: 17px; line-height: 1.35; font-weight: 600; text-wrap: pretty; }
+.t-title button {
+  all: unset;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.t-title button:hover { color: color-mix(in oklab, var(--fg) 70%, var(--cyan)); }
+.t-title button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
+.excerpt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.tag {
+  font: 400 12px/1 var(--font-mono);
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.tag-cat {
+  color: hsl(var(--h) 80% 76%);
+  background: hsl(var(--h) 60% 50% / .14);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.stats {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 14px;
+  font: 400 12px/1 var(--font-mono);
+  color: var(--muted);
+}
+.stats span { display: inline-flex; align-items: center; gap: 5px; }
+.stats svg { width: 14px; height: 14px; }
+
+.thumb {
+  align-self: start;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 170px;
+  max-width: 100%;
+  position: relative;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.thumb img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .4s ease; }
+.thumb:hover img { transform: scale(1.04); }
+.thumb-label {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  font: 500 10px/1 var(--font-mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 4px 6px;
+  border-radius: 5px;
+  background: var(--scrim);
+  color: var(--fg);
+}
+
+.empty {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-lg);
+}
+.empty h3 { margin: 0 0 6px; color: var(--fg); font-size: 16px; }
+.empty p { margin: 0 0 16px; }
+
+/* ---------- Right rail ---------- */
+.rail { display: grid; gap: 16px; }
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+}
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.panel h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.panel-sub { margin: 0; font: 400 12px/1.3 var(--font-mono); color: var(--muted); white-space: nowrap; }
+
+.bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-bottom: 14px; }
+.bar i { height: 6px; border-radius: 3px; background: var(--line); transition: background .3s; }
+.bar i.on { background: linear-gradient(90deg, var(--violet), var(--cyan)); }
+
+.habits { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.habit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 8px;
+  margin: 0 -8px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background .15s;
+}
+.habit:hover { background: var(--surface-2); }
+.habit input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border-radius: 6px;
+  border: 1.5px solid color-mix(in oklab, var(--muted) 60%, var(--line));
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.habit input::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+  opacity: 0;
+}
+.habit input:checked { border-color: transparent; background: linear-gradient(140deg, var(--violet), var(--cyan)); }
+.habit input:checked::after { opacity: 1; }
+.habit-name { flex: 1; min-width: 0; font-size: 14px; }
+.habit input:checked + .habit-name { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in oklab, var(--muted) 60%, transparent); }
+.habit-unit { font: 400 12px/1 var(--font-mono); color: var(--muted); white-space: nowrap; }
+.panel-foot { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
+
+.rank { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.rank li { display: grid; grid-template-columns: 22px 36px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 0; }
+.rank-pos { font: 500 13px/1 var(--font-mono); color: var(--muted); }
+.rank li:first-child .rank-pos { color: var(--amber); }
+.rank-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-name small { display: block; font: 400 12px/1.3 var(--font-mono); color: var(--muted); }
+.rank-pts { font: 500 13px/1 var(--font-mono); color: var(--fg); text-align: right; }
+.rank-pts small { display: block; color: var(--good); font-size: 11px; margin-top: 4px; }
+
+.online { display: flex; align-items: center; gap: 14px; }
+.stack { display: flex; }
+.stack .av { width: 30px; height: 30px; font-size: 11px; box-shadow: 0 0 0 2px var(--surface); }
+.stack .av + .av { margin-left: -8px; }
+.online p { margin: 0; font-size: 13px; color: var(--muted); }
+.online b { color: var(--fg); font-weight: 500; font-family: var(--font-mono); }
+
+/* ---------- Footer ---------- */
+.site-foot {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 13px;
+}
+.site-foot .logo { font-size: 13px; }
+
+/* ---------- Dialogs ---------- */
+dialog {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+  border-radius: var(--r-lg);
+  padding: 0;
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}
+dialog::backdrop {
+  background: rgba(4, 4, 9, .66);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.dlg-in { padding: 24px; display: grid; gap: 16px; }
+.dlg-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.dlg-head h2 { margin: 0; font: 700 20px/1.25 var(--font-display); letter-spacing: -.01em; text-wrap: balance; }
+.dlg-head p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.x {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.x:hover { color: var(--fg); }
+.x svg { width: 16px; height: 16px; }
+.goals { display: flex; flex-wrap: wrap; gap: 8px; border: 0; margin: 0; padding: 0; }
+.goals legend { font-size: 13px; color: var(--muted); margin-bottom: 8px; padding: 0; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.chip span {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: all .15s;
+}
+.chip input:checked + span { color: var(--fg); border-color: color-mix(in oklab, var(--violet) 70%, var(--line)); background: color-mix(in oklab, var(--violet) 16%, transparent); }
+.chip input:focus-visible + span { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* Thread drawer */
+dialog.drawer {
+  margin: 0 0 0 auto;
+  width: min(640px, 100vw);
+  height: 100dvh;
+  max-height: 100dvh;
+  max-width: 100vw;
+  border-radius: 0;
+  border-width: 0 0 0 1px;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+dialog.drawer[open] { animation: slidein .28s cubic-bezier(.2, .8, .2, 1); }
+@keyframes slidein { from { transform: translateX(32px); opacity: .4; } }
+.drawer .dlg-in { gap: 20px; padding: 28px; }
+.d-body { color: color-mix(in oklab, var(--fg) 88%, var(--muted)); font-size: 15px; }
+.d-body p { margin: 0 0 14px; max-width: 65ch; }
+.d-body ol { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 6px; }
+.d-figure { margin: 4px 0 18px; }
+.d-figure img { width: 280px; border-radius: 12px; box-shadow: 0 0 0 1px var(--line); }
+.d-figure figcaption { margin-top: 8px; font: 400 12px/1.4 var(--font-mono); color: var(--muted); }
+.d-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.replies-head { margin: 8px 0 0; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+.replies { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.reply { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+.reply p { margin: 4px 0 0; font-size: 14px; color: color-mix(in oklab, var(--fg) 88%, var(--muted)); overflow-wrap: anywhere; }
+.reply .meta { font-size: 12px; }
+.reply-form { display: grid; gap: 10px; }
+.reply-form textarea { min-height: 84px; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  border: 0;
+  overflow: visible;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 12px);
+  z-index: 80;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  max-width: calc(100vw - 32px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1180px) {
+  .layout { grid-template-columns: minmax(0, 1fr) 300px; }
+  .catnav { position: static; grid-column: 1 / -1; }
+  .catnav .side-label, .rules { display: none; }
+  .cat-list {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .cat-list::-webkit-scrollbar { display: none; }
+  .cat-btn {
+    width: auto;
+    white-space: nowrap;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 14px;
+  }
+  .cat-btn .count { margin-left: 4px; }
+}
+@media (max-width: 980px) {
+  .mainnav { display: none; }
+}
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 36px; padding-block: 36px 32px; }
+  .score-card { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; align-items: center; }
+  .score-card .score-label { grid-column: 1 / -1; }
+  .score-side { display: grid; gap: 12px; justify-items: start; }
+  .ring { width: 140px; height: 140px; }
+  .ring-num { font-size: 38px; }
+}
+@media (max-width: 820px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .topbar-in { flex-wrap: wrap; gap: 10px 12px; }
+  .search { order: 10; flex-basis: 100%; max-width: none; margin-left: 0; }
+  .search kbd { display: none; }
+  .top-actions { margin-left: auto; }
+  .btn-new-label { display: none; }
+  .thread, .thread:has(.thumb) { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; padding: 16px; }
+  .vote-btn { width: 34px; height: 34px; }
+  .thumb { grid-column: 2; width: 100%; max-width: 280px; }
+  .stats { margin-left: 0; width: 100%; margin-top: 4px; }
+  .composer-row { grid-template-columns: minmax(0, 1fr); }
+  .score-card { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .score-side { justify-items: center; }
+  .drawer .dlg-in { padding: 20px 16px; }
+  .d-figure img { width: 100%; max-width: 280px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="logo" href="#top" aria-label="ASCEND, inicio"><span class="logo-mark" aria-hidden="true"></span>ASCEND</a>
+    <nav class="mainnav" aria-label="Principal">
+      <a href="#foro" data-cat="all" aria-current="page">Foro</a>
+      <a href="#foro" data-cat="glowups">Glow-ups</a>
+      <a href="#reto">Reto diario</a>
+      <a href="#ranking">Ranking</a>
+    </nav>
+    <label class="search" for="q">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Buscar temas, rutinas, etiquetas…" autocomplete="off" aria-label="Buscar en el foro">
+      <kbd>/</kbd>
+    </label>
+    <div class="top-actions">
+      <button class="btn" type="button" id="newTop" aria-label="Nuevo tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span class="btn-new-label">Nuevo tema</span>
+      </button>
+      <button class="me" type="button" id="meBtn" aria-label="Crear tu perfil">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero" id="top">
+    <div>
+      <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Comunidad de mejora personal · <span class="mono">48.210</span> miembros</p>
+      <h1>Tu glow up, <span>paso a paso.</span></h1>
+      <p class="lede">Rutinas reales de piel, pelo, físico y estilo. Comparte tu progreso, pide consejo y sigue tu racha diaria. <strong>Aquí no se puntúan caras: se celebra el progreso.</strong></p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" type="button" id="joinBtn">Únete gratis</button>
+        <a class="btn" href="#foro" data-cat="glowups">Ver glow-ups</a>
+      </div>
+      <ul class="hero-stats">
+        <li><b>1.284</b>conectados ahora</li>
+        <li><b>312</b>glow-ups este mes</li>
+        <li><b>9.870</b>rutinas compartidas</li>
+      </ul>
+    </div>
+
+    <aside class="score-card" aria-labelledby="scoreLabel">
+      <p class="score-label" id="scoreLabel">Tu Glow Score de hoy</p>
+      <div class="ring" role="img" id="ringImg" aria-label="Glow Score 0 de 100">
+        <svg viewBox="0 0 160 160" aria-hidden="true">
+          <defs>
+            <linearGradient id="rimGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop class="s1" offset="0"/>
+              <stop class="s2" offset="1"/>
+            </linearGradient>
+          </defs>
+          <g id="ringTrack" fill="none" stroke-width="10" stroke-linecap="round"></g>
+          <g id="ringArcs" fill="none" stroke-width="10" stroke-linecap="round"></g>
+        </svg>
+        <div class="ring-center">
+          <span class="ring-num" id="scoreNum">0</span>
+          <span class="ring-of">de 100</span>
+        </div>
+      </div>
+      <div class="score-side">
+        <p class="score-msg" id="scoreMsg">Marca tu primer hábito de hoy.</p>
+        <a class="score-link" href="#reto">Ir al reto diario</a>
+      </div>
+    </aside>
+  </section>
+
+  <div class="layout" id="foro">
+    <aside class="catnav" aria-label="Categorías">
+      <p class="side-label">Categorías</p>
+      <ul class="cat-list" id="catList"></ul>
+      <div class="rules">
+        <h3>Normas de la casa</h3>
+        <ol>
+          <li>Se celebra el progreso, no se puntúan caras.</li>
+          <li>Feedback solo a quien lo pide.</li>
+          <li>Temas médicos: consulta a un profesional.</li>
+        </ol>
+      </div>
+    </aside>
+
+    <main class="feed">
+      <div class="feed-head">
+        <div>
+          <h2 id="feedTitle">Foro</h2>
+          <p id="feedSub">Lo que se está hablando hoy en la comunidad.</p>
+        </div>
+        <div class="feed-tools">
+          <div class="tabs" role="tablist" aria-label="Ordenar temas">
+            <button class="tab" role="tab" type="button" data-sort="trend" aria-selected="true">Tendencia</button>
+            <button class="tab" role="tab" type="button" data-sort="new" aria-selected="false">Nuevos</button>
+            <button class="tab" role="tab" type="button" data-sort="top" aria-selected="false">Top</button>
+          </div>
+        </div>
+      </div>
+
+      <form class="composer" id="composer" hidden novalidate>
+        <h3>Nuevo tema</h3>
+        <div class="composer-row">
+          <label class="field" for="cTitle">Título
+            <input id="cTitle" name="title" maxlength="120" placeholder="Ej.: Mi rutina de piel después de 3 meses" required>
+          </label>
+          <label class="field" for="cCat">Categoría
+            <select id="cCat" name="cat"></select>
+          </label>
+        </div>
+        <label class="field" for="cBody">Mensaje
+          <textarea id="cBody" name="body" maxlength="4000" placeholder="Cuenta qué hiciste, cuánto tiempo y cuánto te costó. Los detalles ayudan a los demás." required></textarea>
+        </label>
+        <p class="hint" id="cHint">Tu tema se guarda en este navegador.</p>
+        <div class="form-actions">
+          <button class="btn" type="button" id="cCancel">Cancelar</button>
+          <button class="btn btn-primary" type="submit">Publicar tema</button>
+        </div>
+      </form>
+
+      <p class="filter-note" id="filterNote" hidden></p>
+      <ol class="threads" id="threads" aria-live="polite"></ol>
+      <div class="empty" id="empty" hidden>
+        <h3>No hay temas con ese filtro</h3>
+        <p>Prueba otra búsqueda o abre el primer tema sobre esto.</p>
+        <button class="btn" type="button" id="emptyNew">Abrir un tema</button>
+      </div>
+    </main>
+
+    <aside class="rail">
+      <section class="panel" id="reto" aria-labelledby="retoTitle">
+        <div class="panel-head">
+          <h2 id="retoTitle">Reto de hoy</h2>
+          <p class="panel-sub" id="retoCount">0/6</p>
+        </div>
+        <div class="bar" id="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <ul class="habits" id="habits"></ul>
+        <p class="panel-foot">Se reinicia cada día a medianoche. Se guarda en este navegador.</p>
+      </section>
+
+      <section class="panel" id="ranking" aria-labelledby="rankTitle">
+        <div class="panel-head">
+          <h2 id="rankTitle">Top ayudantes</h2>
+          <p class="panel-sub">esta semana</p>
+        </div>
+        <ol class="rank" id="rank"></ol>
+        <p class="panel-foot">Puntos por respuestas que otros marcan como útiles.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="onlineTitle">
+        <div class="panel-head">
+          <h2 id="onlineTitle">Conectados</h2>
+          <p class="panel-sub"><span class="live-dot" style="display:inline-block;width:6px;height:6px;margin-right:6px;vertical-align:middle;box-shadow:none"></span>en directo</p>
+        </div>
+        <div class="online">
+          <div class="stack" id="stack"></div>
+          <p><b>1.284</b> miembros<br>37 en el chat de Fitness</p>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <footer class="site-foot">
+    <span class="logo"><span class="logo-mark" aria-hidden="true"></span>ASCEND</span>
+    <span>Para progresar, no para compararse. © 2026</span>
+  </footer>
+</div>
+
+<!-- Thread drawer -->
+<dialog class="drawer" id="threadDlg" aria-labelledby="dTitle">
+  <div class="dlg-in">
+    <div class="dlg-head">
+      <div class="meta" id="dMeta"></div>
+      <button class="x" type="button" data-close aria-label="Cerrar tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <h2 id="dTitle" style="margin:0;font:700 24px/1.2 var(--font-display);letter-spacing:-.015em;text-wrap:balance"></h2>
+    <div class="d-body" id="dBody"></div>
+    <div class="d-actions" id="dActions"></div>
+    <h3 class="replies-head" id="dReplyHead">Respuestas</h3>
+    <ol class="replies" id="dReplies"></ol>
+    <form class="reply-form" id="replyForm" novalidate>
+      <label class="field" for="rBody">Tu respuesta
+        <textarea id="rBody" maxlength="2000" placeholder="Aporta tu experiencia o una pregunta concreta." required></textarea>
+      </label>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Responder</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Join dialog -->
+<dialog id="joinDlg" aria-labelledby="jTitle">
+  <form class="dlg-in" id="joinForm" method="dialog" novalidate>
+    <div class="dlg-head">
+      <div>
+        <h2 id="jTitle">Crea tu perfil</h2>
+        <p>Elige un nombre y tus objetivos. Tu perfil se guarda en este navegador.</p>
+      </div>
+      <button class="x" type="button" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <label class="field" for="jName">Nombre de usuario
+      <input id="jName" maxlength="20" placeholder="ej. alex.glow" autocomplete="nickname" required>
+    </label>
+    <p class="hint" id="jHint">De 3 a 20 caracteres: letras, números, punto o guion bajo.</p>
+    <fieldset class="goals">
+      <legend>¿En qué quieres mejorar?</legend>
+      <label class="chip"><input type="checkbox" id="g-piel" value="piel"><span>Piel</span></label>
+      <label class="chip"><input type="checkbox" id="g-pelo" value="pelo"><span>Pelo y barba</span></label>
+      <label class="chip"><input type="checkbox" id="g-fitness" value="fitness"><span>Físico</span></label>
+      <label class="chip"><input type="checkbox" id="g-estilo" value="estilo"><span>Estilo</span></label>
+      <label class="chip"><input type="checkbox" id="g-habitos" value="habitos"><span>Hábitos</span></label>
+      <label class="chip"><input type="checkbox" id="g-mente" value="mente"><span>Confianza</span></label>
+    </fieldset>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit" id="jSubmit">Crear perfil</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" popover="manual"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  /* ---------- Helpers ---------- */
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const group = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const fmtK = (n) => n < 1000 ? String(n) : (n / 1000).toFixed(1).replace(/\.0$/, "").replace(".", ",") + "k";
+  const fmt = (n) => n < 10000 ? group(n) : fmtK(n);
+  const ago = (m) => {
+    if (m < 1) return "ahora";
+    if (m < 60) return "hace " + Math.round(m) + " min";
+    if (m < 1440) return "hace " + Math.round(m / 60) + " h";
+    return "hace " + Math.round(m / 1440) + " d";
+  };
+  const hueOf = (s) => {
+    let h = 0;
+    for (const ch of String(s)) h = (h * 31 + ch.codePointAt(0)) % 360;
+    return h;
+  };
+  const initials = (name) => {
+    const parts = String(name).split(/[._\-\s]+/).filter(Boolean);
+    const a = parts[0] ? parts[0][0] : "?";
+    const b = parts[1] ? parts[1][0] : (parts[0] && parts[0][1]) || "";
+    return (a + b).toUpperCase();
+  };
+  const avatar = (name, hue, cls = "") =>
+    `<span class="av ${cls}" style="--h:${hue ?? hueOf(name)}" aria-hidden="true">${esc(initials(name))}</span>`;
+  const todayKey = () => {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  };
+
+  const ICON = {
+    up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
+    reply: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1 3.5 5 5.7 5 11a5 5 0 0 1-10 0c0-2.3 1-3.8 2.2-5 .2 1.6.9 2.7 2 3.2C11 8.6 11.3 5.3 12 2z"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 3l6 6-3 1-4 4 1 5-2 2-4-4-5 5-1-1 5-5-4-4 2-2 5 1 4-4z"/></svg>',
+  };
+
+  /* ---------- Data ---------- */
+  const CATS = [
+    { id: "all", name: "Todos", hue: 250, count: 61240 },
+    { id: "glowups", name: "Glow-ups", hue: 266, count: 8410 },
+    { id: "piel", name: "Piel", hue: 190, count: 12130 },
+    { id: "pelo", name: "Pelo y barba", hue: 30, count: 9720 },
+    { id: "fitness", name: "Fitness", hue: 145, count: 14310 },
+    { id: "estilo", name: "Estilo", hue: 330, count: 6240 },
+    { id: "habitos", name: "Hábitos", hue: 215, count: 5880 },
+    { id: "mente", name: "Mentalidad", hue: 290, count: 4550 },
+  ];
+  const CAT_BY_ID = Object.fromEntries([...CATS, { id: "comunidad", name: "Comunidad", hue: 200 }].map((c) => [c.id, c]));
+
+  const THREADS = [
+    {
+      id: "t0", pinned: true, cat: "comunidad", author: "equipo.ascend", hue: 250, mins: 43200,
+      votes: 3420, replies: 118, views: 96100, tags: ["normas", "empieza-aquí"],
+      title: "Bienvenida: cómo funciona ASCEND (léelo antes de publicar)",
+      excerpt: "Qué se puede publicar, cómo pedir feedback y por qué aquí no se puntúan caras.",
+      body: [
+        "Bienvenido. ASCEND es un sitio para mejorar con método y con apoyo, sin comparaciones tóxicas. Estas son las normas:",
+        ["Se celebra el progreso de cada uno. No se puntúan caras ni cuerpos.", "Solo das feedback sobre el aspecto de alguien si te lo ha pedido en su tema.", "Para temas médicos (acné severo, caída de pelo, nutrición clínica) consulta a un profesional. Aquí compartimos experiencias, no diagnósticos.", "Cuando compartas lo que te funcionó, da detalles: tiempo, coste y constancia."],
+        "El reto diario y el Glow Score son tuyos: nadie más ve tus hábitos.",
+      ],
+    },
+    {
+      id: "t1", cat: "glowups", author: "dani.rv", hue: 262, streak: 238, mins: 190,
+      votes: 1240, replies: 214, views: 18400, tags: ["pelo", "gym", "skincare"], img: true,
+      title: "Mi glow up en 8 meses: rutina completa con fotos",
+      excerpt: "Corte nuevo, piel limpia y 9 kg menos. Os dejo qué hice cada semana, cuánto me gasté y lo que no funcionó.",
+      body: [
+        "Hace ocho meses me hice la foto de la izquierda un lunes cualquiera: dormía 5 horas, comía fatal y llevaba dos años sin pisar una peluquería. Esta es la rutina que seguí, sin trucos raros.",
+        "Piel: limpiador suave, niacinamida al 10 % y SPF 50 cada mañana. Por la noche, limpiador e hidratante. A los tres meses el acné había bajado muchísimo. Gasto: unos 35 € al mes.",
+        "Pelo: llevé tres fotos de referencia y pedí texturizado arriba con degradado bajo. Corte cada 4 semanas y un poco de polvo texturizante.",
+        "Físico: 4 días de pesas (torso y pierna), entre 8.000 y 10.000 pasos al día y 1,8 g de proteína por kilo. Pasé de 84 a 75 kg.",
+        "Lo que más cambió todo fue dormir 8 horas. Las ojeras se fueron antes que cualquier otra cosa.",
+      ],
+      sample: [
+        { author: "lucia_m", hue: 190, mins: 150, text: "La diferencia en la piel es enorme. ¿La niacinamida la empezaste desde el primer día o fuiste subiendo?" },
+        { author: "dani.rv", hue: 262, mins: 140, text: "Desde el primer día pero solo por la mañana. Las dos primeras semanas me picaba un poco y luego nada." },
+        { author: "marco.fades", hue: 30, mins: 95, text: "El degradado bajo con textura arriba le va perfecto a tu forma de cara. Buen trabajo de tu peluquero." },
+      ],
+    },
+    {
+      id: "t2", cat: "piel", author: "lucia_m", hue: 190, streak: 96, mins: 420,
+      votes: 842, replies: 96, views: 9200, tags: ["acné", "rutina", "barato"],
+      title: "Rutina de skincare para piel grasa con acné por menos de 40 €",
+      excerpt: "Limpiador, niacinamida, hidratante ligera y protector. Cuatro productos, dos pasos por la mañana y dos por la noche.",
+      body: [
+        "Mañana: limpiador en gel suave y protector solar SPF 50 con acabado mate. Noche: el mismo limpiador, niacinamida y una hidratante ligera sin aceites.",
+        "Introduce un producto nuevo cada dos semanas para saber qué te sienta mal. Y no toques los granos, de verdad.",
+        "Si en tres meses no ves mejora o el acné es muy inflamatorio, ve al dermatólogo. Hay tratamientos que funcionan y que solo te puede recetar un profesional.",
+      ],
+    },
+    {
+      id: "t3", cat: "pelo", author: "marco.fades", hue: 30, streak: 61, mins: 75,
+      votes: 512, replies: 143, views: 7600, tags: ["corte", "guía"],
+      title: "¿Qué corte me queda? Guía rápida según la forma de tu cara",
+      excerpt: "Ovalada, redonda, cuadrada, alargada o corazón: qué pedir en la peluquería y qué fotos llevar para que te entiendan.",
+      body: [
+        "Cara redonda: volumen arriba y laterales cortos para alargar. Cara cuadrada: casi todo funciona; un texturizado suaviza la mandíbula. Cara alargada: evita mucho volumen arriba y deja algo más de largo en los lados.",
+        "Lleva siempre 2 o 3 fotos de referencia con el pelo parecido al tuyo (liso, ondulado o rizado). Es la forma más fácil de que te entiendan.",
+      ],
+    },
+    {
+      id: "t4", cat: "fitness", author: "sergio.lift", hue: 145, streak: 365, mins: 2880,
+      votes: 1980, replies: 301, views: 31200, tags: ["pérdida-de-grasa", "nutrición"],
+      title: "De 92 a 78 kg en un año sin dejar de comer lo que me gusta",
+      excerpt: "Déficit de unas 400 kcal, proteína alta y pesas 3 días. Sin dietas milagro y con pizza los sábados.",
+      body: [
+        "Calculé mi mantenimiento con una app durante dos semanas y luego comí unas 400 kcal menos. Nada de quitar grupos de alimentos.",
+        "Pesas tres días (cuerpo completo), 9.000 pasos de media y 1,6 g de proteína por kilo. La báscula baja lento, pero las fotos cambian cada mes.",
+      ],
+    },
+    {
+      id: "t5", cat: "fitness", author: "ana.moves", hue: 320, streak: 44, mins: 35,
+      votes: 288, replies: 41, views: 2100, tags: ["postura", "movilidad"],
+      title: "3 ejercicios de postura de 10 minutos que cambiaron mis fotos",
+      excerpt: "Face pulls con goma, estiramiento de pectoral en la puerta y chin tucks. Cada noche, 10 minutos.",
+      body: [
+        "Trabajo 9 horas sentada y salía encorvada en todas las fotos. Esto es lo que hago cada noche:",
+        ["Face pulls con goma elástica: 3 series de 15.", "Estiramiento de pectoral en el marco de la puerta: 3 × 30 segundos por lado.", "Chin tucks contra la pared: 3 series de 10, aguantando 3 segundos."],
+        "A las seis semanas los hombros ya no se me iban hacia delante.",
+      ],
+    },
+    {
+      id: "t6", cat: "estilo", author: "el.sastre", hue: 45, streak: 120, mins: 600,
+      votes: 674, replies: 88, views: 8800, tags: ["outfits", "básicos"],
+      title: "Armario cápsula: 12 prendas, 30 combinaciones (con lista)",
+      excerpt: "Camisetas lisas que te queden bien de hombros, un vaquero recto oscuro, una sobrecamisa y unas zapatillas blancas limpias.",
+      body: [
+        "La talla importa más que la marca. Una camiseta de 10 € que te queda bien de hombros gana a una de 80 € que te queda grande.",
+        "Mi lista: 4 camisetas lisas (blanco, negro, gris, marino), 2 camisas oxford, 1 sobrecamisa, 1 vaquero recto oscuro, 1 chino beige, 1 chaqueta, zapatillas blancas y botas marrones.",
+      ],
+    },
+    {
+      id: "t7", cat: "habitos", author: "nora.sleep", hue: 210, streak: 180, mins: 2900,
+      votes: 1105, replies: 176, views: 15400, tags: ["sueño", "ojeras"],
+      title: "Dormir 8 horas hizo más por mi cara que cualquier crema",
+      excerpt: "Móvil fuera de la habitación, misma hora de despertar todos los días y nada de cafeína después de las 14:00.",
+      body: [
+        "Llevaba años con ojeras y piel apagada. Probé de todo hasta que fijé una hora de despertar, incluidos los fines de semana.",
+        "Tres reglas: el móvil se carga fuera de la habitación, nada de cafeína después de las 14:00 y la luz del día en la cara nada más levantarme.",
+      ],
+    },
+    {
+      id: "t8", cat: "pelo", author: "bruno.b", hue: 15, streak: 23, mins: 260,
+      votes: 233, replies: 57, views: 3300, tags: ["barba", "perfilado"],
+      title: "Barba irregular: cómo perfilarla para que se vea más densa",
+      excerpt: "Línea del cuello dos dedos por encima de la nuez, mejillas naturales y la misma longitud en las zonas más flojas.",
+      body: [
+        "El error típico es apurar demasiado las mejillas. Deja la línea natural y marca bien solo la del cuello, dos dedos por encima de la nuez.",
+        "Recorta todo a la longitud de tu zona más floja. Una barba corta y uniforme parece más densa que una larga con huecos.",
+      ],
+    },
+    {
+      id: "t9", cat: "mente", author: "iker.ascend", hue: 280, streak: 77, mins: 900,
+      votes: 1430, replies: 264, views: 21000, tags: ["confianza", "ansiedad-social"],
+      title: "La parte del glow up que nadie enseña: la confianza",
+      excerpt: "Cambié el físico en un año, pero seguía sin mirar a la gente a los ojos. Lo que me ayudó de verdad fue otra cosa.",
+      body: [
+        "Mejoré piel, pelo y físico, y seguía sintiéndome igual por dentro. El cambio llegó con exposición poco a poco: pedir algo en una tienda, hablar en clase, apuntarme a un club.",
+        "Si la ansiedad te limita el día a día, hablar con un psicólogo fue lo mejor que hice. No es un fracaso, es parte del proceso.",
+      ],
+    },
+    {
+      id: "t10", cat: "piel", author: "pau.spf", hue: 170, streak: 9, mins: 12,
+      votes: 64, replies: 23, views: 640, tags: ["spf", "pregunta"],
+      title: "¿Qué protector solar usáis que no deje la cara blanca?",
+      excerpt: "Tengo la piel morena y todos los que pruebo me dejan un tono grisáceo. Busco algo ligero para diario.",
+      body: [
+        "Tengo la piel morena y todos los protectores que pruebo me dejan un tono grisáceo. Busco algo ligero para diario, SPF 50 si puede ser.",
+      ],
+    },
+  ];
+
+  const REPLY_POOL = {
+    default: [
+      { author: "sergio.lift", hue: 145, mins: 50, text: "Muy útil. Lo guardo para tenerlo a mano." },
+      { author: "nora.sleep", hue: 210, mins: 30, text: "La constancia es lo que más cuenta. Gracias por compartir los detalles." },
+    ],
+    piel: [
+      { author: "lucia_m", hue: 190, mins: 40, text: "Busca filtros químicos o con color. Con piel morena los minerales sin tinte casi siempre dejan ese tono." },
+      { author: "dani.rv", hue: 262, mins: 25, text: "Yo uso uno en gel con acabado invisible y ni se nota. Lo importante es poner suficiente: dos dedos para cara y cuello." },
+    ],
+    fitness: [
+      { author: "sergio.lift", hue: 145, mins: 60, text: "Las fotos mensuales con la misma luz son lo que más motiva. La báscula engaña mucho." },
+      { author: "ana.moves", hue: 320, mins: 20, text: "Súper de acuerdo con lo de los pasos. Es lo más fácil de mantener." },
+    ],
+    pelo: [
+      { author: "marco.fades", hue: 30, mins: 45, text: "Las fotos de referencia lo son todo. Y que sean de alguien con tu tipo de pelo." },
+      { author: "bruno.b", hue: 15, mins: 15, text: "Aplicado. Mi peluquero por fin me entendió a la primera." },
+    ],
+  };
+
+  const RANK = [
+    { name: "sergio.lift", hue: 145, pts: 4820, delta: 312, streak: 365 },
+    { name: "lucia_m", hue: 190, pts: 4310, delta: 288, streak: 96 },
+    { name: "dani.rv", hue: 262, pts: 3975, delta: 401, streak: 238 },
+    { name: "nora.sleep", hue: 210, pts: 3640, delta: 156, streak: 180 },
+    { name: "marco.fades", hue: 30, pts: 3122, delta: 204, streak: 61 },
+  ];
+
+  const HABITS = [
+    { id: "sleep", name: "Dormir 8 horas", unit: "8 h" },
+    { id: "water", name: "Beber agua", unit: "2,5 L" },
+    { id: "am", name: "Skincare de mañana", unit: "SPF 50" },
+    { id: "move", name: "Entrenar o caminar", unit: "10.000 pasos" },
+    { id: "pm", name: "Skincare de noche", unit: "2 pasos" },
+    { id: "posture", name: "Postura y movilidad", unit: "10 min" },
+  ];
+
+  /* ---------- State (per-viewer, browser storage) ---------- */
+  const KEY = "ascend:v1";
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
+  };
+  const saved = load();
+  const state = {
+    cat: "all",
+    sort: "trend",
+    q: "",
+    votes: saved.votes || {},
+    posts: Array.isArray(saved.posts) ? saved.posts : [],
+    replies: saved.replies || {},
+    profile: saved.profile || null,
+    habits: saved.habits || null,
+  };
+  const save = () => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({
+        votes: state.votes, posts: state.posts, replies: state.replies,
+        profile: state.profile, habits: state.habits,
+      }));
+    } catch { /* storage unavailable: keep working in memory */ }
+  };
+
+  const me = () => state.profile ? state.profile.name : "invitado";
+  const allThreads = () => [...state.posts, ...THREADS];
+  const findThread = (id) => allThreads().find((t) => t.id === id);
+  const minsOf = (t) => t.created ? Math.max(0, (Date.now() - t.created) / 60000) : t.mins;
+  const votesOf = (t) => t.votes + (state.votes[t.id] ? 1 : 0);
+  const repliesOf = (t) => t.replies + (state.replies[t.id] ? state.replies[t.id].length : 0);
+
+  /* ---------- Toast ---------- */
+  let toastTimer, hideTimer;
+  const canPop = typeof HTMLElement !== "undefined" && "showPopover" in HTMLElement.prototype;
+  const toast = (msg) => {
+    const el = $("#toast");
+    el.textContent = msg;
+    clearTimeout(toastTimer);
+    clearTimeout(hideTimer);
+    if (canPop) {
+      // Re-open so the toast lands above any open dialog in the top layer
+      try { el.hidePopover(); } catch { /* not open */ }
+      try { el.showPopover(); } catch { /* unsupported */ }
+    }
+    requestAnimationFrame(() => el.classList.add("show"));
+    toastTimer = setTimeout(() => {
+      el.classList.remove("show");
+      if (canPop) hideTimer = setTimeout(() => { try { el.hidePopover(); } catch { /* closed */ } }, 220);
+    }, 2600);
+  };
+
+  /* ---------- Categories ---------- */
+  const renderCats = () => {
+    $("#catList").innerHTML = CATS.map((c) => `
+      <li><button class="cat-btn" type="button" data-cat="${c.id}" aria-pressed="${state.cat === c.id}">
+        <span class="cat-swatch" style="--h:${c.hue}" aria-hidden="true"></span>${esc(c.name)}
+        <span class="count">${fmtK(c.count)}</span>
+      </button></li>`).join("");
+    $("#cCat").innerHTML = CATS.filter((c) => c.id !== "all")
+      .map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("");
+    $$(".mainnav a[data-cat]").forEach((a) => {
+      if (a.dataset.cat === state.cat || (a.dataset.cat === "all" && state.cat !== "glowups")) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+  };
+
+  const setCat = (id) => {
+    state.cat = CAT_BY_ID[id] ? id : "all";
+    renderCats();
+    renderThreads();
+  };
+
+  /* ---------- Threads ---------- */
+  const threadHTML = (t, isNew) => {
+    const voted = !!state.votes[t.id];
+    const cat = CAT_BY_ID[t.cat];
+    return `<li class="thread${isNew ? " is-new" : ""}" data-id="${esc(t.id)}">
+      <div class="vote">
+        <button class="vote-btn" type="button" data-vote="${esc(t.id)}" aria-pressed="${voted}" aria-label="Votar este tema">${ICON.up}</button>
+        <span class="vote-n mono">${fmt(votesOf(t))}</span>
+      </div>
+      <div class="thread-main">
+        <div class="meta">
+          ${avatar(t.author, t.hue)}<span class="author">${esc(t.author)}</span>
+          ${t.streak ? `<span class="streak" title="Racha de ${t.streak} días">${ICON.flame}${t.streak} d</span>` : ""}
+          <span class="sep" aria-hidden="true">·</span><span>${ago(minsOf(t))}</span>
+          ${t.pinned ? `<span class="pin">${ICON.pin}Fijado</span>` : ""}
+        </div>
+        <h3 class="t-title"><button type="button" data-open="${esc(t.id)}">${esc(t.title)}</button></h3>
+        <p class="excerpt">${esc(t.excerpt)}</p>
+        <div class="foot">
+          ${cat ? `<span class="tag tag-cat" style="--h:${cat.hue}">${esc(cat.name)}</span>` : ""}
+          ${(t.tags || []).map((x) => `<span class="tag">#${esc(x)}</span>`).join("")}
+          <span class="stats">
+            <span title="Respuestas">${ICON.reply}${fmt(repliesOf(t))}</span>
+            <span title="Visitas">${ICON.eye}${fmtK(t.views)}</span>
+          </span>
+        </div>
+      </div>
+      ${t.img ? `<button class="thumb" type="button" data-open="${esc(t.id)}" aria-label="Ver las fotos del antes y después">
+        <img src="assets/glow-up.png" width="199" height="112" alt="Antes y después: pelo largo y despeinado con sudadera gris; después, corte texturizado, piel limpia y camiseta negra.">
+        <span class="thumb-label">Antes / después</span>
+      </button>` : ""}
+    </li>`;
+  };
+
+  const trendScore = (t) => votesOf(t) / Math.pow(minsOf(t) / 60 + 2, 1.35);
+
+  const visibleThreads = () => {
+    const q = state.q.trim().toLowerCase();
+    let list = allThreads().filter((t) => {
+      if (state.cat !== "all" && t.cat !== state.cat) return false;
+      if (!q) return true;
+      const hay = [t.title, t.excerpt, t.author, ...(t.tags || []), CAT_BY_ID[t.cat]?.name || ""].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+    const by = {
+      trend: (a, b) => trendScore(b) - trendScore(a),
+      new: (a, b) => minsOf(a) - minsOf(b),
+      top: (a, b) => votesOf(b) - votesOf(a),
+    }[state.sort];
+    list.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || by(a, b));
+    return list;
+  };
+
+  let highlightId = null;
+  const renderThreads = () => {
+    const list = visibleThreads();
+    $("#threads").innerHTML = list.map((t) => threadHTML(t, t.id === highlightId)).join("");
+    highlightId = null;
+    $("#threads").hidden = list.length === 0;
+    $("#empty").hidden = list.length !== 0;
+
+    const cat = CAT_BY_ID[state.cat];
+    $("#feedTitle").textContent = state.cat === "all" ? "Foro" : cat.name;
+    $("#feedSub").textContent = state.cat === "all"
+      ? "Lo que se está hablando hoy en la comunidad."
+      : group(cat.count) + " temas en " + cat.name + ".";
+
+    const note = $("#filterNote");
+    if (state.q.trim()) {
+      note.hidden = false;
+      note.innerHTML = `${list.length} ${list.length === 1 ? "resultado" : "resultados"} para «${esc(state.q.trim())}» <button type="button" id="clearQ">Borrar búsqueda</button>`;
+    } else {
+      note.hidden = true;
+      note.innerHTML = "";
+    }
+  };
+
+  const toggleVote = (id) => {
+    if (state.votes[id]) delete state.votes[id];
+    else state.votes[id] = true;
+    save();
+    $$(`[data-vote="${CSS.escape(id)}"]`).forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(!!state.votes[id]));
+      const n = btn.parentElement.querySelector(".vote-n");
+      if (n) n.textContent = fmt(votesOf(findThread(id)));
+    });
+  };
+
+  /* ---------- Composer ---------- */
+  const openComposer = () => {
+    const form = $("#composer");
+    form.hidden = false;
+    if (state.cat !== "all") $("#cCat").value = state.cat;
+    $("#cHint").textContent = state.profile
+      ? `Publicas como ${state.profile.name}. Tu tema se guarda en este navegador.`
+      : "Publicas como invitado. Crea tu perfil para usar tu nombre. Se guarda en este navegador.";
+    form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    setTimeout(() => $("#cTitle").focus({ preventScroll: true }), 250);
+  };
+  const closeComposer = () => {
+    $("#composer").hidden = true;
+    $("#composer").reset();
+    $("#cHint").textContent = "Tu tema se guarda en este navegador.";
+  };
+
+  $("#composer").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = $("#cTitle").value.trim();
+    const body = $("#cBody").value.trim();
+    if (title.length < 6) { $("#cHint").textContent = "Escribe un título de al menos 6 caracteres."; $("#cTitle").focus(); return; }
+    if (body.length < 10) { $("#cHint").textContent = "Escribe un mensaje de al menos 10 caracteres."; $("#cBody").focus(); return; }
+    const post = {
+      id: "u" + Date.now(),
+      cat: $("#cCat").value,
+      author: me(),
+      hue: state.profile ? hueOf(state.profile.name) : 250,
+      created: Date.now(),
+      votes: 0, replies: 0, views: 1, tags: [],
+      title,
+      excerpt: body.length > 180 ? body.slice(0, 177) + "…" : body,
+      body: body.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean),
+    };
+    state.posts.unshift(post);
+    save();
+    closeComposer();
+    state.sort = "new";
+    syncTabs();
+    if (state.cat !== "all" && state.cat !== post.cat) state.cat = post.cat;
+    state.q = "";
+    $("#q").value = "";
+    highlightId = post.id;
+    renderCats();
+    renderThreads();
+    toast("Tema publicado");
+  });
+  $("#cCancel").addEventListener("click", closeComposer);
+  $("#newTop").addEventListener("click", openComposer);
+  $("#emptyNew").addEventListener("click", openComposer);
+
+  /* ---------- Sorting ---------- */
+  const syncTabs = () => $$(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.sort === state.sort)));
+  $$(".tab").forEach((tab) => tab.addEventListener("click", () => {
+    state.sort = tab.dataset.sort;
+    syncTabs();
+    renderThreads();
+  }));
+
+  /* ---------- Search ---------- */
+  $("#q").addEventListener("input", (e) => { state.q = e.target.value; renderThreads(); });
+  document.addEventListener("keydown", (e) => {
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (e.key === "/" && !["input", "textarea", "select"].includes(tag) && !e.target.isContentEditable) {
+      e.preventDefault();
+      $("#q").focus();
+    }
+  });
+
+  /* ---------- Delegated clicks ---------- */
+  document.addEventListener("click", (e) => {
+    const catEl = e.target.closest("[data-cat]");
+    if (catEl) {
+      setCat(catEl.dataset.cat);
+      if (catEl.tagName !== "A") return;
+    }
+    const vote = e.target.closest("[data-vote]");
+    if (vote) { toggleVote(vote.dataset.vote); return; }
+    const open = e.target.closest("[data-open]");
+    if (open) { openThread(open.dataset.open); return; }
+    if (e.target.closest("#clearQ")) {
+      state.q = "";
+      $("#q").value = "";
+      renderThreads();
+      $("#q").focus();
+    }
+    const close = e.target.closest("[data-close]");
+    if (close) close.closest("dialog").close();
+  });
+
+  /* ---------- Thread drawer ---------- */
+  const dlg = $("#threadDlg");
+  const bodyHTML = (body) => body.map((p) => Array.isArray(p)
+    ? `<ol>${p.map((li) => `<li>${esc(li)}</li>`).join("")}</ol>`
+    : `<p>${esc(p)}</p>`).join("");
+
+  const repliesFor = (t) => {
+    const base = t.sample || (t.id.startsWith("u") ? [] : (REPLY_POOL[t.cat] || REPLY_POOL.default));
+    return [...base, ...(state.replies[t.id] || [])];
+  };
+
+  const renderReplies = (t) => {
+    const list = repliesFor(t);
+    $("#dReplyHead").textContent = `Respuestas · ${fmt(repliesOf(t))}`;
+    $("#dReplies").innerHTML = list.length ? list.map((r) => `
+      <li class="reply">
+        ${avatar(r.author, r.hue, "lg")}
+        <div>
+          <div class="meta"><span class="author">${esc(r.author)}</span><span class="sep" aria-hidden="true">·</span><span>${ago(r.created ? (Date.now() - r.created) / 60000 : r.mins)}</span></div>
+          <p>${esc(r.text)}</p>
+        </div>
+      </li>`).join("") : `<li class="hint">Todavía no hay respuestas. Sé el primero.</li>`;
+  };
+
+  const openThread = (id) => {
+    const t = findThread(id);
+    if (!t) return;
+    const cat = CAT_BY_ID[t.cat];
+    dlg.dataset.id = id;
+    $("#dMeta").innerHTML = `${avatar(t.author, t.hue)}<span class="author">${esc(t.author)}</span>
+      ${t.streak ? `<span class="streak">${ICON.flame}${t.streak} d</span>` : ""}
+      <span class="sep" aria-hidden="true">·</span><span>${ago(minsOf(t))}</span>
+      ${cat ? `<span class="tag tag-cat" style="--h:${cat.hue}">${esc(cat.name)}</span>` : ""}`;
+    $("#dTitle").textContent = t.title;
+    $("#dBody").innerHTML = (t.img ? `<figure class="d-figure">
+        <img src="assets/glow-up.png" width="199" height="112" alt="Antes y después: pelo largo y despeinado con sudadera gris; después, corte texturizado, piel limpia y camiseta negra.">
+        <figcaption>Antes / después · 8 meses</figcaption>
+      </figure>` : "") + bodyHTML(t.body || [t.excerpt]);
+    const voted = !!state.votes[t.id];
+    $("#dActions").innerHTML = `
+      <div class="vote" style="grid-auto-flow:column;align-items:center;gap:10px">
+        <button class="vote-btn" type="button" data-vote="${esc(t.id)}" aria-pressed="${voted}" aria-label="Votar este tema">${ICON.up}</button>
+        <span class="vote-n mono">${fmt(votesOf(t))}</span>
+      </div>
+      ${(t.tags || []).map((x) => `<span class="tag">#${esc(x)}</span>`).join("")}`;
+    renderReplies(t);
+    $("#rBody").value = "";
+    if (!dlg.open) dlg.showModal();
+    dlg.querySelector(".dlg-in").scrollTop = 0;
+    dlg.scrollTop = 0;
+  };
+
+  $("#replyForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = $("#rBody").value.trim();
+    if (text.length < 2) { $("#rBody").focus(); return; }
+    const id = dlg.dataset.id;
+    (state.replies[id] = state.replies[id] || []).push({
+      author: me(), hue: state.profile ? hueOf(state.profile.name) : 250, created: Date.now(), text,
+    });
+    save();
+    $("#rBody").value = "";
+    renderReplies(findThread(id));
+    renderThreads();
+    toast("Respuesta publicada");
+  });
+
+  // Close dialogs when the backdrop is clicked
+  $$("dialog").forEach((d) => d.addEventListener("click", (e) => {
+    if (e.target !== d) return;
+    const r = d.getBoundingClientRect();
+    const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside) d.close();
+  }));
+
+  /* ---------- Profile ---------- */
+  const joinDlg = $("#joinDlg");
+  const openJoin = () => {
+    $("#jName").value = state.profile ? state.profile.name : "";
+    $$(".goals input").forEach((i) => { i.checked = !!(state.profile && state.profile.goals.includes(i.value)); });
+    $("#jTitle").textContent = state.profile ? "Tu perfil" : "Crea tu perfil";
+    $("#jSubmit").textContent = state.profile ? "Guardar cambios" : "Crear perfil";
+    $("#jHint").textContent = "De 3 a 20 caracteres: letras, números, punto o guion bajo.";
+    joinDlg.showModal();
+    setTimeout(() => $("#jName").focus(), 50);
+  };
+  const renderProfile = () => {
+    const btn = $("#meBtn");
+    const join = $("#joinBtn");
+    if (state.profile) {
+      btn.classList.add("has-profile");
+      btn.style.background = `linear-gradient(135deg, hsl(${hueOf(state.profile.name)} 70% 58%), hsl(${hueOf(state.profile.name) + 40} 65% 38%))`;
+      btn.textContent = initials(state.profile.name);
+      btn.setAttribute("aria-label", "Tu perfil: " + state.profile.name);
+      join.textContent = "Publicar mi progreso";
+    } else {
+      join.textContent = "Únete gratis";
+    }
+  };
+  $("#meBtn").addEventListener("click", openJoin);
+  $("#joinBtn").addEventListener("click", () => (state.profile ? openComposer() : openJoin()));
+  $("#joinForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = $("#jName").value.trim().toLowerCase();
+    if (!/^[a-z0-9._]{3,20}$/.test(name)) {
+      $("#jHint").textContent = "Ese nombre no vale. Usa de 3 a 20 caracteres: letras sin tilde, números, punto o guion bajo.";
+      $("#jName").focus();
+      return;
+    }
+    const isNew = !state.profile;
+    state.profile = { name, goals: $$(".goals input:checked").map((i) => i.value) };
+    save();
+    renderProfile();
+    joinDlg.close();
+    toast(isNew ? `Perfil creado. Bienvenido, ${name}` : "Perfil guardado");
+  });
+
+  /* ---------- Daily challenge + Glow Score ---------- */
+  const R = 66, C = 2 * Math.PI * R, SEG = C / HABITS.length, GAP = 17;
+  const arc = (i, cls) => `<circle class="${cls}" cx="80" cy="80" r="${R}" stroke-dasharray="${(SEG - GAP).toFixed(2)} ${(C - SEG + GAP).toFixed(2)}" stroke-dashoffset="${(-(i * SEG) - GAP / 2).toFixed(2)}"/>`;
+  $("#ringTrack").innerHTML = HABITS.map((_, i) => arc(i, "track")).join("");
+  $("#ringArcs").innerHTML = HABITS.map((_, i) => arc(i, "arc")).join("");
+
+  const ensureHabits = () => {
+    if (!state.habits || state.habits.date !== todayKey()) state.habits = { date: todayKey(), done: [] };
+  };
+
+  const scoreMessage = (n) => {
+    if (n === 0) return "Marca tu primer hábito de hoy.";
+    if (n <= 2) return `<b>${n} de 6</b> hábitos hechos. Buen comienzo.`;
+    if (n <= 4) return `<b>${n} de 6</b> hábitos hechos. Más de la mitad.`;
+    if (n === 5) return `<b>5 de 6</b> hábitos hechos. Te falta uno.`;
+    return "<b>Día completo.</b> Mañana, a por otro.";
+  };
+
+  const renderScore = () => {
+    const n = state.habits.done.length;
+    const score = Math.round((n / HABITS.length) * 100);
+    $("#scoreNum").textContent = score;
+    $("#ringImg").setAttribute("aria-label", `Glow Score ${score} de 100`);
+    $("#scoreMsg").innerHTML = scoreMessage(n);
+    $$("#ringArcs .arc").forEach((a, i) => a.classList.toggle("on", i < n));
+    $$("#bar i").forEach((b, i) => b.classList.toggle("on", i < n));
+    $("#retoCount").textContent = `${n}/${HABITS.length}`;
+  };
+
+  const renderHabits = () => {
+    ensureHabits();
+    $("#habits").innerHTML = HABITS.map((h) => `
+      <li><label class="habit" for="h-${h.id}">
+        <input type="checkbox" id="h-${h.id}" data-habit="${h.id}" ${state.habits.done.includes(h.id) ? "checked" : ""}>
+        <span class="habit-name">${esc(h.name)}</span>
+        <span class="habit-unit">${esc(h.unit)}</span>
+      </label></li>`).join("");
+    renderScore();
+  };
+
+  $("#habits").addEventListener("change", (e) => {
+    const id = e.target.dataset.habit;
+    if (!id) return;
+    ensureHabits();
+    const done = new Set(state.habits.done);
+    e.target.checked ? done.add(id) : done.delete(id);
+    state.habits.done = HABITS.map((h) => h.id).filter((x) => done.has(x));
+    save();
+    renderScore();
+    if (state.habits.done.length === HABITS.length) toast("Día completo. Racha +1");
+  });
+
+  /* ---------- Rail: ranking + online ---------- */
+  $("#rank").innerHTML = RANK.map((r, i) => `
+    <li>
+      <span class="rank-pos">${i + 1}</span>
+      ${avatar(r.name, r.hue, "lg")}
+      <span class="rank-name">${esc(r.name)}<small>racha ${r.streak} d</small></span>
+      <span class="rank-pts">${group(r.pts)}<small>+${r.delta}</small></span>
+    </li>`).join("");
+  $("#stack").innerHTML = ["ana.moves", "el.sastre", "pau.spf", "bruno.b", "iker.ascend", "lucia_m"]
+    .map((n) => avatar(n)).join("");
+
+  /* ---------- Boot ---------- */
+  renderCats();
+  renderThreads();
+  renderHabits();
+  renderProfile();
+})();
+</script>
+</body>
+</html>
