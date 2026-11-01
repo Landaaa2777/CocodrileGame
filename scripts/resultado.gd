@@ -11,6 +11,7 @@ const COLOR_VICTORIA := Color(0.55, 0.9, 0.25)
 const COLOR_DERROTA := Color(1.0, 0.45, 0.45)
 const RETRASO_SONIDO_S := 0.25
 const RETRASO_MUSICA_S := 2.2
+const RETRASO_AUTOJUGAR_S := 1.0
 
 @onready var escenario: Escenario = $Escenario
 @onready var titulo: Label = %Titulo
@@ -80,6 +81,11 @@ func _ready() -> void:
 	await get_tree().create_timer(RETRASO_MUSICA_S).timeout
 	if is_inside_tree() and not _cambiando:
 		Audio.reproducir_musica("menu")
+	# Pruebas de humo del CI: en práctica, encadena rondas sin intervención.
+	if not en_red and "--autojugar" in OS.get_cmdline_user_args():
+		await get_tree().create_timer(RETRASO_AUTOJUGAR_S).timeout
+		if is_inside_tree():
+			_pedir_revancha()
 
 
 func _animar_entrada() -> void:

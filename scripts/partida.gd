@@ -28,6 +28,9 @@ const BYTES_SAL := 16
 const COLOR_MI_TURNO := Color(0.6, 0.92, 0.3)
 const COLOR_TURNO_RIVAL := Color(1.0, 0.55, 0.55)
 const COLOR_NEUTRO := Color(1.0, 1.0, 1.0, 0.92)
+## Argumento de línea de comandos (tras «--») para las pruebas de humo del CI:
+## en modo práctica el bot juega también por el jugador local.
+const ARGUMENTO_AUTOJUGAR := "--autojugar"
 
 enum Modo { RED, PRACTICA }
 
@@ -63,10 +66,12 @@ var _diente_apuntado: Diente = null
 var _diente_pulsado: Diente = null
 var _diente_rival: Diente = null
 var _estilo_turno: StyleBoxFlat
+var _autojugar := false
 
 
 func _ready() -> void:
 	_rng.randomize()
+	_autojugar = ARGUMENTO_AUTOJUGAR in OS.get_cmdline_user_args()
 	var datos := Transicion.datos
 	modo = Modo.PRACTICA if datos.get("modo", "") == "practica" else Modo.RED
 	if modo == Modo.RED and not Red.esta_conectado():
@@ -132,6 +137,7 @@ func _comenzar_ronda_local() -> void:
 func _terminar_ronda(perdedor: int, mensaje: Dictionary) -> void:
 	_terminada = true
 	var gane := perdedor != mi_jugador
+	print("[Partida] Ronda %d terminada: pierde el jugador %d" % [reglas.ronda, perdedor])
 	var verificado := true
 	if not soy_anfitrion:
 		# Comprobación del compromiso: el mordedor revelado debe coincidir con el
@@ -383,15 +389,16 @@ func _al_desconectar(motivo: String) -> void:
 # --- Bot del modo práctica ----------------------------------------------------------------
 
 func _programar_bot_si_toca() -> void:
-	if modo != Modo.PRACTICA or _terminada or _animando or reglas.turno != ReglasJuego.INVITADO:
+	if modo != Modo.PRACTICA or _terminada or _animando:
 		return
-	_jugar_bot()
+	if reglas.turno == ReglasJuego.INVITADO or (_autojugar and reglas.turno == mi_jugador):
+		_jugar_bot(reglas.turno)
 
 
 ## El bot NO conoce el mordedor: elige al azar entre los dientes libres.
-func _jugar_bot() -> void:
+func _jugar_bot(jugador: int) -> void:
 	await get_tree().create_timer(_rng.randf_range(RETRASO_BOT_MIN_S, RETRASO_BOT_MAX_S)).timeout
-	if not is_inside_tree() or _terminada or _animando or reglas.turno != ReglasJuego.INVITADO:
+	if not is_inside_tree() or _terminada or _animando or reglas.turno != jugador:
 		return
 	var libres: Array[int] = []
 	for i in ReglasJuego.TOTAL_DIENTES:
@@ -406,7 +413,9 @@ func _jugar_bot() -> void:
 	if not is_inside_tree() or _terminada:
 		return
 	diente.marcar_apuntado_rival(false)
-	_difundir_resultado(reglas.aplicar_jugada(ReglasJuego.INVITADO, eleccion))
+	if jugador == mi_jugador:
+		diente.presionar()
+	_difundir_resultado(reglas.aplicar_jugada(jugador, eleccion))
 
 
 # --- Interfaz ------------------------------------------------------------------------------

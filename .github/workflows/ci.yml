@@ -1,0 +1,106 @@
+name: CI
+
+# Valida, prueba con Godot real (headless) y exporta el APK de depuración.
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  GODOT_VERSION: "4.7.2"
+  GODOT_ESTADO: "stable"
+  WEBRTC_VERSION: "1.1.0-stable"
+
+jobs:
+  estatico:
+    name: Lint y validación estática
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar gdtoolkit
+        run: pip install "gdtoolkit==4.*"
+      - name: gdlint
+        run: gdlint autoload scripts tests
+      - name: Escenas, recursos y referencias
+        run: python3 tools/validar_escenas.py
+
+  pruebas:
+    name: Pruebas con Godot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Caché de Godot
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/godot-ci
+          key: godot-${{ env.GODOT_VERSION }}-${{ env.GODOT_ESTADO }}
+      - name: Instalar Godot
+        run: bash tools/ci/instalar_godot.sh
+      - name: Instalar addon webrtc-native
+        run: bash tools/instalar_webrtc.sh
+      - name: Importar el proyecto
+        run: godot --headless --path . --import 2>&1 | tee importacion.txt
+      - name: Pruebas unitarias (turnos, mordedor, código de conexión, escena)
+        run: godot --headless --path . --script res://tests/ejecutar_pruebas.gd
+      - name: Prueba de red local (dos pares WebRTC reales en el mismo proceso)
+        run: godot --headless --path . --script res://tests/prueba_red_local.gd
+      - name: Pruebas de humo de las escenas
+        run: bash tools/ci/humo.sh
+      - name: Guardar registros
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: registros-pruebas
+          path: "*.txt"
+
+  android:
+    name: Exportar APK (depuración)
+    needs: [estatico, pruebas]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Caché de Godot y plantillas
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/godot-ci
+            ~/.local/share/godot/export_templates
+          key: godot-plantillas-${{ env.GODOT_VERSION }}-${{ env.GODOT_ESTADO }}
+      - name: Instalar Godot y plantillas
+        run: bash tools/ci/instalar_godot.sh plantillas
+      - name: Instalar addon webrtc-native
+        run: bash tools/instalar_webrtc.sh
+      - name: Configurar Android
+        run: bash tools/ci/configurar_android.sh
+      - name: Importar el proyecto
+        run: godot --headless --path . --import
+      - name: Exportar APK
+        run: |
+          mkdir -p build/android
+          godot --headless --path . --export-debug "Android" build/android/cocodrilo-dentista-debug.apk
+          ls -la build/android
+          echo "Bibliotecas nativas incluidas:"
+          unzip -l build/android/cocodrilo-dentista-debug.apk | grep "lib/" || true
+          unzip -l build/android/cocodrilo-dentista-debug.apk | grep -qi "webrtc" \
+            || { echo "::error::El APK no contiene la biblioteca de webrtc-native"; exit 1; }
+      - name: Artefacto APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: cocodrilo-dentista-apk
+          path: build/android/cocodrilo-dentista-debug.apk

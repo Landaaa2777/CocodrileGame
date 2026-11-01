@@ -10,7 +10,8 @@ build/
 *.idsig
 
 # Addon webrtc-native: se descarga con tools/instalar_webrtc.sh (binarios grandes)
-addons/webrtc/
+addons/webrtc*/
+webrtc/
 
 # Claves de firma: NUNCA al repositorio
 *.keystore
