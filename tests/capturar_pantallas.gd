@@ -17,7 +17,16 @@ const CAPTURAS := [
 ]
 
 
+## Si algo se atasca (sin GPU, diálogo del sistema...), se sale igualmente.
+const TIEMPO_LIMITE_S := 90.0
+
+
 func _initialize() -> void:
+	print("Render: ", RenderingServer.get_video_adapter_name(), " / ",
+		RenderingServer.get_video_adapter_vendor(), " / ", RenderingServer.get_video_adapter_api_version())
+	create_timer(TIEMPO_LIMITE_S).timeout.connect(func() -> void:
+		printerr("Tiempo agotado al capturar")
+		quit(1))
 	_capturar.call_deferred()
 
 

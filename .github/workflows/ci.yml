@@ -23,6 +23,7 @@ env:
 
 jobs:
   estatico:
+    timeout-minutes: 20
     name: Lint y validación estática
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +39,7 @@ jobs:
         run: python3 tools/validar_escenas.py
 
   pruebas:
+    timeout-minutes: 20
     name: Pruebas con Godot
     runs-on: ubuntu-latest
     steps:
@@ -68,6 +70,7 @@ jobs:
           path: "*.txt"
 
   capturas:
+    timeout-minutes: 20
     name: Capturas con render real
     needs: [estatico]
     runs-on: ubuntu-latest
@@ -88,8 +91,10 @@ jobs:
         run: godot --headless --path . --import
       - name: Renderizar capturas
         run: |
-          xvfb-run -a -s "-screen 0 1280x1024x24" godot --path . --rendering-driver opengl3 \
-            --resolution 405x720 --script res://tests/capturar_pantallas.gd 2>&1 | tee capturas.txt
+          export LIBGL_ALWAYS_SOFTWARE=1
+          timeout 240 xvfb-run -a -s "-screen 0 1280x1024x24" godot --path . --display-driver x11 \
+            --rendering-driver opengl3 --resolution 405x720 --script res://tests/capturar_pantallas.gd \
+            2>&1 | tee capturas.txt
           ls -la build/capturas
       - name: Hoja de contactos
         run: |
@@ -103,6 +108,7 @@ jobs:
           path: build/capturas
 
   web:
+    timeout-minutes: 20
     name: Exportar Web
     needs: [estatico]
     runs-on: ubuntu-latest
@@ -136,6 +142,7 @@ jobs:
           path: build/web
 
   android:
+    timeout-minutes: 20
     name: Exportar APK (depuración)
     needs: [estatico]
     runs-on: ubuntu-latest
@@ -176,6 +183,7 @@ jobs:
           path: build/android/cocodrilo-dentista-debug.apk
 
   pages:
+    timeout-minutes: 20
     name: Publicar en GitHub Pages
     if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     needs: [web, pruebas]
@@ -191,6 +199,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   publicar:
+    timeout-minutes: 20
     name: Adjuntar APK y web a la release
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [web, android, pruebas]
