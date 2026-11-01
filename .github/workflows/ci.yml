@@ -1,6 +1,7 @@
 name: CI
 
-# Valida, prueba con Godot real (headless) y exporta el APK de depuración.
+# Valida, prueba con Godot real (headless), exporta Web y APK de depuración y
+# publica la versión web en GitHub Pages desde la rama principal.
 on:
   push:
     branches: ["**"]
@@ -65,6 +66,39 @@ jobs:
           name: registros-pruebas
           path: "*.txt"
 
+  web:
+    name: Exportar Web
+    needs: [estatico, pruebas]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Caché de Godot y plantillas
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/godot-ci
+            ~/.local/share/godot/export_templates
+          key: godot-plantillas-${{ env.GODOT_VERSION }}-${{ env.GODOT_ESTADO }}
+      - name: Instalar Godot y plantillas
+        run: bash tools/ci/instalar_godot.sh plantillas
+      - name: Importar el proyecto
+        run: godot --headless --path . --import
+      - name: Exportar
+        run: |
+          mkdir -p build/web
+          godot --headless --path . --export-release "Web" build/web/index.html
+          ls -la build/web
+          test -f build/web/index.pck && test -f build/web/index.wasm
+      - name: Artefacto para GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+      - name: Artefacto descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: cocodrilo-dentista-web
+          path: build/web
+
   android:
     name: Exportar APK (depuración)
     needs: [estatico, pruebas]
@@ -104,3 +138,39 @@ jobs:
         with:
           name: cocodrilo-dentista-apk
           path: build/android/cocodrilo-dentista-debug.apk
+
+  pages:
+    name: Publicar en GitHub Pages
+    if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    needs: [web]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4
+
+  publicar:
+    name: Adjuntar APK y web a la release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [web, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artefactos
+      - name: Empaquetar
+        run: |
+          cd artefactos/cocodrilo-dentista-web && zip -qr ../../cocodrilo-dentista-web.zip . && cd ../..
+          cp artefactos/cocodrilo-dentista-apk/cocodrilo-dentista-debug.apk cocodrilo-dentista.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            cocodrilo-dentista.apk
+            cocodrilo-dentista-web.zip
