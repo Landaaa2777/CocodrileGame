@@ -60,6 +60,9 @@ var _canales_sfx: Array[AudioStreamPlayer] = []
 var _siguiente_canal := 0
 var _streams := {}
 var _tween_tension: Tween
+## Fundidos de música en curso: se cancelan al cambiar de pista para que un
+## «stop» pendiente no corte la pista nueva.
+var _tweens_musica: Array[Tween] = []
 
 
 func _ready() -> void:
@@ -102,6 +105,7 @@ func reproducir_musica(nombre: String) -> void:
 	if stream == null:
 		return
 	_pista_actual = nombre
+	_cancelar_fundidos()
 	var saliente := _musica_activa
 	var entrante := _musica_b if _musica_activa == _musica_a else _musica_a
 	_musica_activa = entrante
@@ -109,7 +113,7 @@ func reproducir_musica(nombre: String) -> void:
 	entrante.volume_db = VOLUMEN_SILENCIO_DB
 	entrante.pitch_scale = 1.0
 	entrante.play()
-	var tween := create_tween().set_parallel(true)
+	var tween := _nuevo_fundido().set_parallel(true)
 	tween.tween_property(entrante, "volume_db", 0.0, DURACION_FUNDIDO_MUSICA_S) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	if saliente.playing:
@@ -127,7 +131,7 @@ func reproducir_musica(nombre: String) -> void:
 			_capa_tension.pitch_scale = 1.0
 			_capa_tension.play(entrante.get_playback_position())
 	elif _capa_tension.playing:
-		var fundido := create_tween()
+		var fundido := _nuevo_fundido()
 		fundido.tween_property(_capa_tension, "volume_db", VOLUMEN_SILENCIO_DB, DURACION_FUNDIDO_MUSICA_S)
 		fundido.tween_callback(_capa_tension.stop)
 
@@ -135,8 +139,9 @@ func reproducir_musica(nombre: String) -> void:
 func detener_musica() -> void:
 	_pista_actual = ""
 	_pista_pendiente = ""
+	_cancelar_fundidos()
 	for reproductor in [_musica_a, _musica_b, _capa_tension]:
-		var tween := create_tween()
+		var tween := _nuevo_fundido()
 		tween.tween_property(reproductor, "volume_db", VOLUMEN_SILENCIO_DB, DURACION_FUNDIDO_MUSICA_S)
 		tween.tween_callback(reproductor.stop)
 
@@ -213,6 +218,19 @@ func _guardar_ajustes() -> void:
 
 
 # --- Utilidades ----------------------------------------------------------------------
+
+func _nuevo_fundido() -> Tween:
+	var tween := create_tween()
+	_tweens_musica.append(tween)
+	return tween
+
+
+func _cancelar_fundidos() -> void:
+	for tween in _tweens_musica:
+		if tween.is_valid():
+			tween.kill()
+	_tweens_musica.clear()
+
 
 func _crear_reproductor(bus: StringName) -> AudioStreamPlayer:
 	var reproductor := AudioStreamPlayer.new()

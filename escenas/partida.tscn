@@ -1,0 +1,165 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/partida.gd" id="1_partida"]
+[ext_resource type="PackedScene" path="res://escenas/escenario.tscn" id="2_escenario"]
+
+[node name="Partida" type="Node"]
+script = ExtResource("1_partida")
+
+[node name="Escenario" parent="." instance=ExtResource("2_escenario")]
+
+[node name="Interfaz" type="CanvasLayer" parent="."]
+
+[node name="Raiz" type="Control" parent="Interfaz"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Destello" type="ColorRect" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Arriba" type="VBoxContainer" parent="Interfaz/Raiz"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 44.0
+offset_right = -20.0
+offset_bottom = 200.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+
+[node name="Marcador" type="Label" parent="Interfaz/Raiz/Arriba"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 28
+text = "Tú 0  ·  0 Rival"
+horizontal_alignment = 1
+
+[node name="Turno" type="PanelContainer" parent="Interfaz/Raiz/Arriba"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_type_variation = &"Pildora"
+
+[node name="TurnoTexto" type="Label" parent="Interfaz/Raiz/Arriba/Turno"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.22, 0.32, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 44
+text = "¡Tu turno!"
+horizontal_alignment = 1
+
+[node name="Anuncio" type="Label" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -60.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"Titulo"
+theme_override_font_sizes/font_size = 72
+text = "Ronda 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Globos" type="Control" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BotonSalir" type="Button" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -190.0
+offset_top = -110.0
+offset_right = -24.0
+offset_bottom = -30.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_type_variation = &"BotonAzul"
+text = "Salir"
+
+[node name="Velo" type="ColorRect" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.1, 0.3, 0.5)
+
+[node name="Dialogo" type="PanelContainer" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -170.0
+offset_right = 290.0
+offset_bottom = 170.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Columna" type="VBoxContainer" parent="Interfaz/Raiz/Dialogo"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="DialogoTexto" type="Label" parent="Interfaz/Raiz/Dialogo/Columna"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Se perdió la conexión con el rival."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="BotonDialogo" type="Button" parent="Interfaz/Raiz/Dialogo/Columna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+text = "Volver al menú"

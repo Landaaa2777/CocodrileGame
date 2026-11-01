@@ -1,3 +1,4 @@
+class_name RedP2P
 extends Node
 ## Autoload «Red»: conexión P2P entre dos jugadores con WebRTC.
 ##

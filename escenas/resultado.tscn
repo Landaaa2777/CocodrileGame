@@ -1,0 +1,108 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/resultado.gd" id="1_resultado"]
+[ext_resource type="PackedScene" path="res://escenas/escenario.tscn" id="2_escenario"]
+
+[node name="Resultado" type="Node"]
+script = ExtResource("1_resultado")
+
+[node name="Escenario" parent="." instance=ExtResource("2_escenario")]
+
+[node name="Interfaz" type="CanvasLayer" parent="."]
+
+[node name="Raiz" type="Control" parent="Interfaz"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Arriba" type="VBoxContainer" parent="Interfaz/Raiz"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = 330.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Titulo" type="Label" parent="Interfaz/Raiz/Arriba"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Titulo"
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 104
+text = "¡Ganaste!"
+horizontal_alignment = 1
+
+[node name="Subtitulo" type="Label" parent="Interfaz/Raiz/Arriba"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 32
+text = "¡El cocodrilo mordió a tu rival!"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Marcador" type="Label" parent="Interfaz/Raiz/Arriba"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 28
+text = "Tú 1  ·  0 Rival"
+horizontal_alignment = 1
+
+[node name="Verificacion" type="Label" parent="Interfaz/Raiz/Arriba"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 22
+text = "✔ El anfitrión no cambió el diente mordedor"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Abajo" type="VBoxContainer" parent="Interfaz/Raiz"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -330.0
+offset_right = 240.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="Estado" type="Label" parent="Interfaz/Raiz/Abajo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BotonOtraVez" type="Button" parent="Interfaz/Raiz/Abajo"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+text = "Jugar otra vez"
+
+[node name="BotonMenu" type="Button" parent="Interfaz/Raiz/Abajo"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+theme_type_variation = &"BotonCoral"
+text = "Menú"

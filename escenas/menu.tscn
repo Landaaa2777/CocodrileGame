@@ -1,0 +1,199 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" path="res://escenas/escenario.tscn" id="2_escenario"]
+
+[node name="Menu" type="Node"]
+script = ExtResource("1_menu")
+
+[node name="Escenario" parent="." instance=ExtResource("2_escenario")]
+
+[node name="Interfaz" type="CanvasLayer" parent="."]
+
+[node name="Raiz" type="Control" parent="Interfaz"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Logo" type="VBoxContainer" parent="Interfaz/Raiz"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 60.0
+offset_bottom = 330.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = -30
+alignment = 1
+
+[node name="LineaCocodrilo" type="HBoxContainer" parent="Interfaz/Raiz/Logo"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="LineaDentista" type="HBoxContainer" parent="Interfaz/Raiz/Logo"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Botones" type="VBoxContainer" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -380.0
+offset_right = 240.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 18
+alignment = 2
+
+[node name="BotonCrear" type="Button" parent="Interfaz/Raiz/Botones"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+text = "Crear partida"
+
+[node name="BotonUnirse" type="Button" parent="Interfaz/Raiz/Botones"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_type_variation = &"BotonCoral"
+text = "Unirse"
+
+[node name="Fila" type="HBoxContainer" parent="Interfaz/Raiz/Botones"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BotonPracticar" type="Button" parent="Interfaz/Raiz/Botones/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BotonAzul"
+text = "Practicar"
+
+[node name="BotonOpciones" type="Button" parent="Interfaz/Raiz/Botones/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BotonAzul"
+text = "Opciones"
+
+[node name="AvisoSonido" type="Label" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -58.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Toca la pantalla para activar el sonido"
+horizontal_alignment = 1
+
+[node name="Version" type="Label" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -40.0
+offset_right = -14.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
+text = "v1.0.0"
+horizontal_alignment = 2
+
+[node name="Velo" type="ColorRect" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.1, 0.3, 0.45)
+
+[node name="PanelOpciones" type="PanelContainer" parent="Interfaz/Raiz"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -240.0
+offset_right = 280.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Columna" type="VBoxContainer" parent="Interfaz/Raiz/PanelOpciones"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TituloOpciones" type="Label" parent="Interfaz/Raiz/PanelOpciones/Columna"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 46
+text = "Opciones"
+horizontal_alignment = 1
+
+[node name="EtiquetaMusica" type="Label" parent="Interfaz/Raiz/PanelOpciones/Columna"]
+layout_mode = 2
+text = "Volumen de la música"
+
+[node name="SliderMusica" type="HSlider" parent="Interfaz/Raiz/PanelOpciones/Columna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="EtiquetaEfectos" type="Label" parent="Interfaz/Raiz/PanelOpciones/Columna"]
+layout_mode = 2
+text = "Volumen de los efectos"
+
+[node name="SliderEfectos" type="HSlider" parent="Interfaz/Raiz/PanelOpciones/Columna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="BotonCerrarOpciones" type="Button" parent="Interfaz/Raiz/PanelOpciones/Columna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+text = "¡Listo!"

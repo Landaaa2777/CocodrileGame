@@ -1,0 +1,183 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/conexion.gd" id="1_conexion"]
+[ext_resource type="PackedScene" path="res://escenas/escenario.tscn" id="2_escenario"]
+
+[node name="Conexion" type="Node"]
+script = ExtResource("1_conexion")
+
+[node name="Escenario" parent="." instance=ExtResource("2_escenario")]
+
+[node name="Interfaz" type="CanvasLayer" parent="."]
+
+[node name="Raiz" type="Control" parent="Interfaz"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Margen" type="MarginContainer" parent="Interfaz/Raiz"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 40
+
+[node name="Columna" type="VBoxContainer" parent="Interfaz/Raiz/Margen"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Titulo" type="Label" parent="Interfaz/Raiz/Margen/Columna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Titulo"
+text = "Crear partida"
+horizontal_alignment = 1
+
+[node name="Estado" type="PanelContainer" parent="Interfaz/Raiz/Margen/Columna"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Pildora"
+
+[node name="EstadoTexto" type="Label" parent="Interfaz/Raiz/Margen/Columna/Estado"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Esperando al rival..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Paso1" type="PanelContainer" parent="Interfaz/Raiz/Margen/Columna"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Contenido" type="VBoxContainer" parent="Interfaz/Raiz/Margen/Columna/Paso1"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Paso1Titulo" type="Label" parent="Interfaz/Raiz/Margen/Columna/Paso1/Contenido"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "1. Paso"
+autowrap_mode = 3
+
+[node name="Codigo1" type="TextEdit" parent="Interfaz/Raiz/Margen/Columna/Paso1/Contenido"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+wrap_mode = 1
+
+[node name="Fila" type="HBoxContainer" parent="Interfaz/Raiz/Margen/Columna/Paso1/Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BotonPegar1" type="Button" parent="Interfaz/Raiz/Margen/Columna/Paso1/Contenido/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BotonAzul"
+text = "Pegar"
+
+[node name="BotonCopiar1" type="Button" parent="Interfaz/Raiz/Margen/Columna/Paso1/Contenido/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BotonAzul"
+text = "Copiar"
+
+[node name="BotonAccion1" type="Button" parent="Interfaz/Raiz/Margen/Columna/Paso1/Contenido/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.6
+theme_override_font_sizes/font_size = 28
+text = "Continuar"
+
+[node name="Paso2" type="PanelContainer" parent="Interfaz/Raiz/Margen/Columna"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Contenido" type="VBoxContainer" parent="Interfaz/Raiz/Margen/Columna/Paso2"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Paso2Titulo" type="Label" parent="Interfaz/Raiz/Margen/Columna/Paso2/Contenido"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "2. Paso"
+autowrap_mode = 3
+
+[node name="Codigo2" type="TextEdit" parent="Interfaz/Raiz/Margen/Columna/Paso2/Contenido"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+wrap_mode = 1
+
+[node name="Fila" type="HBoxContainer" parent="Interfaz/Raiz/Margen/Columna/Paso2/Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BotonPegar2" type="Button" parent="Interfaz/Raiz/Margen/Columna/Paso2/Contenido/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BotonAzul"
+text = "Pegar"
+
+[node name="BotonCopiar2" type="Button" parent="Interfaz/Raiz/Margen/Columna/Paso2/Contenido/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BotonAzul"
+text = "Copiar"
+
+[node name="BotonAccion2" type="Button" parent="Interfaz/Raiz/Margen/Columna/Paso2/Contenido/Fila"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.6
+theme_override_font_sizes/font_size = 28
+text = "Continuar"
+
+[node name="Espacio" type="Control" parent="Interfaz/Raiz/Margen/Columna"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="FilaInferior" type="HBoxContainer" parent="Interfaz/Raiz/Margen/Columna"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BotonVolver" type="Button" parent="Interfaz/Raiz/Margen/Columna/FilaInferior"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 80)
+layout_mode = 2
+theme_type_variation = &"BotonCoral"
+text = "Volver"
+
+[node name="BotonReintentar" type="Button" parent="Interfaz/Raiz/Margen/Columna/FilaInferior"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 80)
+layout_mode = 2
+theme_type_variation = &"BotonAzul"
+text = "Reintentar"
