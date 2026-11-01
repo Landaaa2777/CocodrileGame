@@ -21,7 +21,7 @@ const VOLUMEN_SILENCIO_DB := -60.0
 const CANALES_SFX := 10
 ## Capa de tensión de la partida: inaudible al empezar, a tope con el último diente.
 const VOLUMEN_TENSION_MIN_DB := -32.0
-const VOLUMEN_TENSION_MAX_DB := 0.0
+const VOLUMEN_TENSION_MAX_DB := -4.0
 const TONO_TENSION_MAX := 1.05
 const DURACION_CAMBIO_TENSION_S := 1.2
 
