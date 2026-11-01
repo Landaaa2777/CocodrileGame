@@ -180,7 +180,8 @@ func unirse(codigo_anfitrion: String) -> bool:
 ## ANFITRIÓN: aplica la respuesta del invitado. A partir de aquí ICE conecta solo.
 func aceptar_respuesta(codigo_invitado: String) -> bool:
 	if not es_anfitrion or _peer == null or estado != Estado.ESPERANDO_RIVAL:
-		aviso.emit("Primero espera a que se genere tu código.")
+		aviso.emit("Primero espera a que se genere tu código." if estado == Estado.GENERANDO_CODIGO
+			else "La respuesta ya se aplicó; espera a que conecte.")
 		return false
 	var datos := decodificar_codigo(codigo_invitado)
 	if datos.is_empty() or datos["tipo"] != TIPO_RESPUESTA:
@@ -379,10 +380,9 @@ func _revisar_recoleccion(paso: float) -> void:
 func _revisar_conexion(paso: float) -> void:
 	var estado_peer := _peer.get_connection_state()
 	match estado_peer:
-		WebRTCPeerConnection.STATE_CONNECTING:
-			if estado == Estado.ESPERANDO_RIVAL:
-				# El invitado se entera aquí de que el anfitrión pegó su respuesta.
-				_cambiar_estado(Estado.CONECTANDO)
+		# Ojo: STATE_CONNECTING NO indica que el rival ya pegó su código. Las
+		# implementaciones entran en ese estado en cuanto empieza ICE, incluso antes
+		# de tener la descripción remota, así que no se usa para cambiar de estado.
 		WebRTCPeerConnection.STATE_CONNECTED:
 			_tiempo_desconectado = 0.0
 		WebRTCPeerConnection.STATE_DISCONNECTED:
@@ -394,9 +394,14 @@ func _revisar_conexion(paso: float) -> void:
 		WebRTCPeerConnection.STATE_FAILED:
 			if estado == Estado.CONECTADO:
 				_perder_conexion("Se perdió la conexión con el rival.")
-			else:
+				return
+			if estado == Estado.CONECTANDO:
 				_fallar(TEXTO_TURN)
-			return
+				return
+			# El invitado que espera a que el anfitrión pegue su respuesta puede ver
+			# FAILED porque sus comprobaciones ICE no obtienen respuesta todavía. Sigue
+			# esperando: cuando el anfitrión aplique la respuesta, ICE puede recuperarse
+			# con las comprobaciones que le lleguen.
 		WebRTCPeerConnection.STATE_CLOSED:
 			if estado == Estado.CONECTADO:
 				_perder_conexion("El rival cerró la conexión.")

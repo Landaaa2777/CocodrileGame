@@ -12,6 +12,8 @@ const RedScript := preload("res://autoload/red.gd")
 const ProtocoloScript := preload("res://scripts/protocolo.gd")
 const TIEMPO_LIMITE_S := 60.0
 const DIENTE_DE_PRUEBA := 7
+## Simula el tiempo que tarda una persona en copiar y pegar la respuesta.
+const PAUSA_COPIAR_PEGAR_S := 3.0
 
 var _anfitrion: Node
 var _invitado: Node
@@ -35,7 +37,7 @@ func _initialize() -> void:
 	_invitado.codigo_generado.connect(func(codigo: String) -> void:
 		print("Respuesta del invitado: %d caracteres" % codigo.length())
 		_describir_codigo(codigo)
-		_anfitrion.aceptar_respuesta(codigo))
+		_pegar_respuesta_tras_pausa(codigo))
 	_anfitrion.conectado.connect(func() -> void:
 		print("Anfitrión conectado; enviando jugada de prueba")
 		_anfitrion.enviar(ProtocoloScript.crear(ProtocoloScript.JUGADA, {"diente": DIENTE_DE_PRUEBA})))
@@ -54,6 +56,17 @@ func _initialize() -> void:
 
 	if not _anfitrion.crear_partida():
 		_fallar("no se pudo crear la partida (¿falta addons/webrtc?)")
+
+
+func _pegar_respuesta_tras_pausa(codigo: String) -> void:
+	await create_timer(PAUSA_COPIAR_PEGAR_S).timeout
+	# Regresión: mientras el rival no pega su código, el anfitrión debe seguir
+	# «Esperando al rival...» y aceptar la respuesta.
+	if _anfitrion.estado != RedScript.Estado.ESPERANDO_RIVAL:
+		_fallar("el anfitrión no está esperando al rival (estado %d)" % _anfitrion.estado)
+		return
+	if not _anfitrion.aceptar_respuesta(codigo):
+		_fallar("el anfitrión rechazó la respuesta del invitado")
 
 
 func _describir_codigo(codigo: String) -> void:
