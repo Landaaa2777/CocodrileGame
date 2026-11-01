@@ -10,7 +10,7 @@ B azul cielo, L lila (peana), Y amarillo, K negro/contorno, · otros.
 import sys
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageStat
 
 PALETA = {
     "G": (128, 214, 41), "g": (55, 120, 25), "R": (240, 70, 75), "P": (250, 180, 205),
@@ -47,7 +47,7 @@ def main() -> int:
         imagen = Image.open(ruta).convert("RGB")
         print(f"\n=== {ruta.name} {imagen.size}")
         conteo, total = imprimir_mapa(imagen, COLUMNAS)
-        luminancia = sum(imagen.convert("L").getdata()) / (imagen.width * imagen.height)
+        luminancia = ImageStat.Stat(imagen.convert("L")).mean[0]
         print(f"  luminancia media: {luminancia:.0f}/255")
         if "partida" in ruta.name:
             # Zoom al cocodrilo para revisar ojos, boca y dientes.
