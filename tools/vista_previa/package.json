@@ -1,0 +1,9 @@
+{
+  "name": "vista-previa-cocodrilo",
+  "private": true,
+  "description": "Vista previa aproximada del cocodrilo con three.js (no forma parte del juego)",
+  "type": "module",
+  "dependencies": {
+    "three": "0.170.0"
+  }
+}

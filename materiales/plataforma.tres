@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/toon.gdshader" id="1_toon"]
+[ext_resource type="Material" path="res://materiales/contorno.tres" id="2_contorno"]
+
+[resource]
+next_pass = ExtResource("2_contorno")
+shader = ExtResource("1_toon")
+shader_parameter/color_base = Color(0.8, 0.74, 1, 1)
+shader_parameter/bandas = 3.0
+shader_parameter/brillo_especular = 0.4
+shader_parameter/tamano_especular = 0.5
+shader_parameter/brillo_satinado = 0.15
+shader_parameter/fuerza_borde = 0.4

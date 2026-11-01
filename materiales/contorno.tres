@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/contorno.gdshader" id="1_contorno"]
+
+[resource]
+render_priority = -1
+shader = ExtResource("1_contorno")
+shader_parameter/color_contorno = Color(0.1, 0.13, 0.08, 1)
+shader_parameter/grosor = 0.0042

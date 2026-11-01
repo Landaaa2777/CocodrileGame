@@ -1,0 +1,21 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/toon.gdshader" id="1_toon"]
+[ext_resource type="Material" path="res://materiales/contorno.tres" id="2_contorno"]
+[ext_resource type="Texture2D" path="res://assets/texturas/escamas_albedo.png" id="3_albedo"]
+[ext_resource type="Texture2D" path="res://assets/texturas/escamas_normal.png" id="4_normal"]
+
+[resource]
+next_pass = ExtResource("2_contorno")
+shader = ExtResource("1_toon")
+shader_parameter/color_base = Color(1, 1, 1, 1)
+shader_parameter/textura_albedo = ExtResource("3_albedo")
+shader_parameter/textura_normal = ExtResource("4_normal")
+shader_parameter/usar_normal = true
+shader_parameter/fuerza_normal = 1.2
+shader_parameter/escala_uv = Vector2(3, 2)
+shader_parameter/bandas = 3.0
+shader_parameter/brillo_especular = 0.7
+shader_parameter/tamano_especular = 0.35
+shader_parameter/brillo_satinado = 0.22
+shader_parameter/fuerza_borde = 0.45

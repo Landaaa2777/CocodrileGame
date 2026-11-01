@@ -9,9 +9,9 @@ extends RefCounted
 ## mordedor. El invitado mantiene un espejo sin ese dato (diente_mordedor = SIN_DIENTE)
 ## que actualiza con los resultados que le envía el anfitrión.
 
+## Dientes jugables (en la mandíbula inferior, como en el juguete). La hilera
+## superior del modelo es decorativa.
 const TOTAL_DIENTES := 12
-const DIENTES_SUPERIORES := 6
-const DIENTES_INFERIORES := TOTAL_DIENTES - DIENTES_SUPERIORES
 
 const ANFITRION := 0
 const INVITADO := 1

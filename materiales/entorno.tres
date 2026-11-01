@@ -1,0 +1,19 @@
+[gd_resource type="Environment" format=3]
+
+[ext_resource type="Shader" path="res://shaders/cielo.gdshader" id="1_cielo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cielo"]
+shader = ExtResource("1_cielo")
+
+[sub_resource type="Sky" id="Sky_fiesta"]
+sky_material = SubResource("ShaderMaterial_cielo")
+radiance_size = 0
+
+[resource]
+background_mode = 2
+sky = SubResource("Sky_fiesta")
+ambient_light_source = 2
+ambient_light_color = Color(0.66, 0.68, 0.92, 1)
+ambient_light_energy = 0.62
+reflected_light_source = 1
+tonemap_mode = 0

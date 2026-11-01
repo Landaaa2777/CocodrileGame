@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/ojo.gdshader" id="1_ojo"]
+[ext_resource type="Material" path="res://materiales/contorno.tres" id="2_contorno"]
+[ext_resource type="Texture2D" path="res://assets/texturas/ojo_pupila.png" id="3_pupila"]
+
+[resource]
+next_pass = ExtResource("2_contorno")
+shader = ExtResource("1_ojo")
+shader_parameter/textura_pupila = ExtResource("3_pupila")
+shader_parameter/mirada = Vector2(0, 0)
+shader_parameter/alcance_mirada = 0.42
+shader_parameter/tamano_pupila = 0.46
+shader_parameter/dilatacion = 1.0
+shader_parameter/mostrar_pupila = 1.0

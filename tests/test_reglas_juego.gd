@@ -25,8 +25,6 @@ func test_mordedor_siempre_entre_los_validos() -> void:
 
 
 func test_constantes_coherentes() -> void:
-	afirmar_igual(Reglas.DIENTES_SUPERIORES + Reglas.DIENTES_INFERIORES, Reglas.TOTAL_DIENTES,
-		"Superiores + inferiores = total")
 	afirmar(Reglas.TOTAL_DIENTES % 2 == 0, "Número par de dientes: empezar no da ventaja")
 
 

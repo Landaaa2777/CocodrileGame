@@ -1,0 +1,511 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/cocodrilo.gd" id="1_cocodrilo"]
+[ext_resource type="Material" path="res://materiales/plataforma.tres" id="2_plataforma"]
+[ext_resource type="Material" path="res://materiales/escamas.tres" id="3_escamas"]
+[ext_resource type="Material" path="res://materiales/panza.tres" id="4_panza"]
+[ext_resource type="Material" path="res://materiales/ojo.tres" id="5_ojo"]
+[ext_resource type="Material" path="res://materiales/parpado.tres" id="6_parpado"]
+[ext_resource type="Material" path="res://materiales/negro.tres" id="7_negro"]
+[ext_resource type="Material" path="res://materiales/encia.tres" id="8_encia"]
+[ext_resource type="Material" path="res://materiales/diente.tres" id="9_diente"]
+[ext_resource type="Material" path="res://materiales/lengua.tres" id="10_lengua"]
+[ext_resource type="PackedScene" path="res://escenas/diente.tscn" id="11_diente"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_1"]
+radius = 0.5
+height = 1
+radial_segments = 48
+rings = 12
+is_hemisphere = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_2"]
+radius = 0.5
+height = 1
+radial_segments = 32
+rings = 16
+is_hemisphere = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_3"]
+radius = 0.5
+height = 1
+radial_segments = 16
+rings = 8
+is_hemisphere = false
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4"]
+radius = 0.19
+height = 0.62
+radial_segments = 24
+rings = 6
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5"]
+radius = 0.3
+height = 1.35
+radial_segments = 24
+rings = 6
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6"]
+radius = 0.19
+height = 1.05
+radial_segments = 24
+rings = 6
+
+[sub_resource type="SphereMesh" id="SphereMesh_7"]
+radius = 0.27
+height = 0.54
+radial_segments = 32
+rings = 16
+is_hemisphere = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_8"]
+radius = 0.292
+height = 0.292
+radial_segments = 32
+rings = 8
+is_hemisphere = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_9"]
+radius = 0.038
+height = 0.4
+radial_segments = 12
+rings = 2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_10"]
+radius = 0.078
+height = 0.3
+radial_segments = 16
+rings = 4
+
+[node name="Cocodrilo" type="Node3D"]
+script = ExtResource("1_cocodrilo")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(4.6, 0, 0, 0, 0.38, 0, 0, 0, 5.6, 0, -0.08, -0.35)
+mesh = SubResource("SphereMesh_1")
+material_override = ExtResource("2_plataforma")
+
+[node name="Pose" type="Node3D" parent="."]
+
+[node name="Respiracion" type="Node3D" parent="Pose"]
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Pose/Respiracion"]
+transform = Transform3D(1.75, 0, 0, 0, 1.05, 0, 0, 0, 2.5, 0, 0.66, -1.05)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Panza" type="MeshInstance3D" parent="Pose/Respiracion"]
+transform = Transform3D(1.45, 0, 0, 0, 0.76, 0, 0, 0, 1.9, 0, 0.5, -0.72)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("4_panza")
+
+[node name="Crestas" type="Node3D" parent="Pose/Respiracion"]
+
+[node name="Cresta0" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, -0.24, 1.04043, -0.35)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta1" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, 0.24, 1.04043, -0.35)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta2" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, -0.24, 1.123826, -0.8)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta3" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, 0.24, 1.123826, -0.8)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta4" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, -0.24, 1.127828, -1.25)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta5" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, 0.24, 1.127828, -1.25)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta6" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, -0.24, 1.054688, -1.7)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cresta7" type="MeshInstance3D" parent="Pose/Respiracion/Crestas"]
+transform = Transform3D(0.22, 0, 0, 0, 0.17, 0, 0, 0, 0.28, 0.24, 1.054688, -1.7)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Patas" type="Node3D" parent="Pose/Respiracion"]
+
+[node name="PataDelanteraIzq" type="Node3D" parent="Pose/Respiracion/Patas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.72, 0, -0.35)
+
+[node name="Muslo" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraIzq"]
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, 0, 0.33, 0)
+mesh = SubResource("CapsuleMesh_4")
+material_override = ExtResource("3_escamas")
+
+[node name="Pie" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraIzq"]
+transform = Transform3D(0.38, 0, 0, 0, 0.17, 0, 0, 0, 0.48, -0.1, 0.08, 0.08)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Garra0" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraIzq"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, -0.2, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra1" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraIzq"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, -0.1, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra2" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraIzq"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="PataDelanteraDer" type="Node3D" parent="Pose/Respiracion/Patas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0, -0.35)
+
+[node name="Muslo" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraDer"]
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 0, 0.33, 0)
+mesh = SubResource("CapsuleMesh_4")
+material_override = ExtResource("3_escamas")
+
+[node name="Pie" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraDer"]
+transform = Transform3D(0.38, 0, 0, 0, 0.17, 0, 0, 0, 0.48, 0.1, 0.08, 0.08)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Garra0" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraDer"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra1" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraDer"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0.1, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra2" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataDelanteraDer"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0.2, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="PataTraseraIzq" type="Node3D" parent="Pose/Respiracion/Patas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.76, 0, -1.72)
+
+[node name="Muslo" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraIzq"]
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, 0, 0.33, 0)
+mesh = SubResource("CapsuleMesh_4")
+material_override = ExtResource("3_escamas")
+
+[node name="Pie" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraIzq"]
+transform = Transform3D(0.38, 0, 0, 0, 0.17, 0, 0, 0, 0.48, -0.1, 0.08, 0.08)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Garra0" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraIzq"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, -0.2, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra1" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraIzq"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, -0.1, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra2" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraIzq"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="PataTraseraDer" type="Node3D" parent="Pose/Respiracion/Patas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.76, 0, -1.72)
+
+[node name="Muslo" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraDer"]
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 0, 0.33, 0)
+mesh = SubResource("CapsuleMesh_4")
+material_override = ExtResource("3_escamas")
+
+[node name="Pie" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraDer"]
+transform = Transform3D(0.38, 0, 0, 0, 0.17, 0, 0, 0, 0.48, 0.1, 0.08, 0.08)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Garra0" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraDer"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra1" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraDer"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0.1, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Garra2" type="MeshInstance3D" parent="Pose/Respiracion/Patas/PataTraseraDer"]
+transform = Transform3D(0.1, 0, 0, 0, 0.08, 0, 0, 0, 0.12, 0.2, 0.06, 0.3)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("4_panza")
+
+[node name="Cola" type="Node3D" parent="Pose/Respiracion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, -2.1)
+
+[node name="Segmento1" type="MeshInstance3D" parent="Pose/Respiracion/Cola"]
+transform = Transform3D(0.927184, -0.374607, 0, 0, 0, -1, 0.374607, 0.927184, 0, 0.206034, 0, -0.509951)
+mesh = SubResource("CapsuleMesh_5")
+material_override = ExtResource("3_escamas")
+
+[node name="PuntaCola" type="Node3D" parent="Pose/Respiracion/Cola"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.419559, 0, -1.038446)
+
+[node name="Segmento2" type="MeshInstance3D" parent="Pose/Respiracion/Cola/PuntaCola"]
+transform = Transform3D(0.529919, -0.848048, 0, 0, 0, -1, 0.848048, 0.529919, 0, 0.35618, 0, -0.222566)
+mesh = SubResource("CapsuleMesh_6")
+material_override = ExtResource("3_escamas")
+
+[node name="CrestaCola0" type="MeshInstance3D" parent="Pose/Respiracion/Cola"]
+transform = Transform3D(0.18, 0, 0, 0, 0.14, 0, 0, 0, 0.22, 0.157335, 0.27, -0.389417)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="CrestaCola1" type="MeshInstance3D" parent="Pose/Respiracion/Cola"]
+transform = Transform3D(0.18, 0, 0, 0, 0.14, 0, 0, 0, 0.22, 0.337146, 0.27, -0.834465)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="Cabeza" type="Node3D" parent="Pose/Respiracion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.05)
+
+[node name="Craneo" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza"]
+transform = Transform3D(1.56, 0, 0, 0, 1.1, 0, 0, 0, 1.24, 0, 0.36, -0.18)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Mejillas" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza"]
+transform = Transform3D(1.6, 0, 0, 0, 0.62, 0, 0, 0, 1, 0, 0.02, 0.05)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Ojos" type="Node3D" parent="Pose/Respiracion/Cabeza"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0.02)
+
+[node name="OjoIzq" type="Node3D" parent="Pose/Respiracion/Cabeza/Ojos"]
+transform = Transform3D(0.984808, 0, -0.173648, 0, 1, 0, 0.173648, 0, 0.984808, -0.37, 0, 0)
+
+[node name="Cuenca" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq"]
+transform = Transform3D(0.68, 0, 0, 0, 0.68, 0, 0, 0, 0.68, 0, -0.06, -0.06)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Globo" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.05)
+mesh = SubResource("SphereMesh_7")
+material_override = ExtResource("5_ojo")
+
+[node name="Parpado" type="Node3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq"]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0.02, 0.05)
+
+[node name="ParpadoMalla" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq/Parpado"]
+mesh = SubResource("SphereMesh_8")
+material_override = ExtResource("6_parpado")
+
+[node name="MarcaX" type="Node3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.31)
+visible = false
+
+[node name="BarraA" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq/MarcaX"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_9")
+material_override = ExtResource("7_negro")
+
+[node name="BarraB" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoIzq/MarcaX"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_9")
+material_override = ExtResource("7_negro")
+
+[node name="OjoDer" type="Node3D" parent="Pose/Respiracion/Cabeza/Ojos"]
+transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, 0.37, 0, 0)
+
+[node name="Cuenca" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer"]
+transform = Transform3D(0.68, 0, 0, 0, 0.68, 0, 0, 0, 0.68, 0, -0.06, -0.06)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Globo" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.05)
+mesh = SubResource("SphereMesh_7")
+material_override = ExtResource("5_ojo")
+
+[node name="Parpado" type="Node3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer"]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0.02, 0.05)
+
+[node name="ParpadoMalla" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer/Parpado"]
+mesh = SubResource("SphereMesh_8")
+material_override = ExtResource("6_parpado")
+
+[node name="MarcaX" type="Node3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.31)
+visible = false
+
+[node name="BarraA" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer/MarcaX"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_9")
+material_override = ExtResource("7_negro")
+
+[node name="BarraB" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Ojos/OjoDer/MarcaX"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_9")
+material_override = ExtResource("7_negro")
+
+[node name="Maxilar" type="Node3D" parent="Pose/Respiracion/Cabeza"]
+transform = Transform3D(1, 0, 0, 0, 0.891007, 0.45399, 0, -0.45399, 0.891007, 0, 0.06, 0.22)
+
+[node name="Hocico" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar"]
+transform = Transform3D(1.32, 0, 0, 0, 0.5, 0, 0, 0, 2.2, 0, 0.1, 1.02)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Paladar" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar"]
+transform = Transform3D(1.12, 0, 0, 0, 0.3, 0, 0, 0, 1.9, 0, -0.02, 0.98)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("8_encia")
+
+[node name="Narinas" type="Node3D" parent="Pose/Respiracion/Cabeza/Maxilar"]
+
+[node name="BultoIzq" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/Narinas"]
+transform = Transform3D(0.28, 0, 0, 0, 0.22, 0, 0, 0, 0.28, -0.19, 0.235764, 1.82)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="FosaIzq" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/Narinas"]
+transform = Transform3D(0.085, 0, 0, 0, 0.031721, 0.02747, 0, -0.014792, 0.05891, -0.19, 0.340764, 1.86)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("7_negro")
+
+[node name="BultoDer" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/Narinas"]
+transform = Transform3D(0.28, 0, 0, 0, 0.22, 0, 0, 0, 0.28, 0.19, 0.235764, 1.82)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("3_escamas")
+
+[node name="FosaDer" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/Narinas"]
+transform = Transform3D(0.085, 0, 0, 0, 0.031721, 0.02747, 0, -0.014792, 0.05891, 0.19, 0.340764, 1.86)
+mesh = SubResource("SphereMesh_3")
+material_override = ExtResource("7_negro")
+
+[node name="DientesSuperiores" type="Node3D" parent="Pose/Respiracion/Cabeza/Maxilar"]
+
+[node name="DienteDeco0" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(-0.207055, -0.100443, 0.765277, 0, -0.742756, -0.110918, 0.772741, -0.026914, 0.205055, -0.482963, -0.057302, 0.757416)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco1" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(0.140225, -0.102376, 0.780008, 0, -0.742756, -0.110918, 0.787615, 0.018227, -0.13887, -0.492259, -0.057437, 1.130741)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco2" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(0.477652, -0.083417, 0.635556, 0, -0.742756, -0.110918, 0.641754, 0.062086, -0.473039, -0.401096, -0.056213, 1.493476)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco3" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(0.748946, -0.036553, 0.278496, 0, -0.742756, -0.110918, 0.281212, 0.09735, -0.741712, -0.175757, -0.054212, 1.785117)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco4" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(0.748429, 0.036731, -0.279855, 0, -0.742756, -0.110918, -0.282584, 0.097283, -0.741201, 0.176615, -0.054217, 1.784561)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco5" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(0.476475, 0.08353, -0.636422, 0, -0.742756, -0.110918, -0.642628, 0.061933, -0.471873, 0.401643, -0.05622, 1.492211)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco6" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(0.138781, 0.102409, -0.780261, 0, -0.742756, -0.110918, -0.78787, 0.018039, -0.137441, 0.492419, -0.057439, 1.12919)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="DienteDeco7" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Maxilar/DientesSuperiores"]
+transform = Transform3D(-0.207055, 0.100443, -0.765277, 0, -0.742756, -0.110918, -0.772741, -0.026914, 0.205055, 0.482963, -0.057302, 0.757416)
+mesh = SubResource("CapsuleMesh_10")
+material_override = ExtResource("9_diente")
+
+[node name="Mandibula" type="Node3D" parent="Pose/Respiracion/Cabeza"]
+transform = Transform3D(1, 0, 0, 0, 0.978148, -0.207912, 0, 0.207912, 0.978148, 0, -0.1, 0.18)
+
+[node name="MandibulaMalla" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Mandibula"]
+transform = Transform3D(1.44, 0, 0, 0, 0.42, 0, 0, 0, 2.44, 0, -0.17, 1.05)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("3_escamas")
+
+[node name="Encia" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Mandibula"]
+transform = Transform3D(1.2, 0, 0, 0, 0.24, 0, 0, 0, 2.14, 0, -0.01, 1.05)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("8_encia")
+
+[node name="Lengua" type="MeshInstance3D" parent="Pose/Respiracion/Cabeza/Mandibula"]
+transform = Transform3D(0.64, 0, 0, 0, 0.14, 0, 0, 0, 1.2, 0, 0.07, 0.86)
+mesh = SubResource("SphereMesh_2")
+material_override = ExtResource("10_lengua")
+
+[node name="Dientes" type="Node3D" parent="Pose/Respiracion/Cabeza/Mandibula"]
+
+[node name="Diente0" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(-0.469472, -0.122419, -0.87442, 0, 0.990342, -0.138648, 0.882948, -0.065091, -0.464937, -0.441474, 0.02602, 0.627476)
+indice = 0
+
+[node name="Diente1" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(-0.160536, -0.13685, -0.977497, 0, 0.990342, -0.138648, 0.98703, -0.022258, -0.158985, -0.493515, 0.026296, 0.905518)
+indice = 1
+
+[node name="Diente2" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.151226, -0.137053, -0.978952, 0, 0.990342, -0.138648, 0.988499, 0.020967, 0.149766, -0.49425, 0.0263, 1.186104)
+indice = 2
+
+[node name="Diente3" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.459301, -0.123158, -0.879702, 0, 0.990342, -0.138648, 0.888281, 0.063681, 0.454865, -0.44414, 0.026033, 1.463371)
+indice = 3
+
+[node name="Diente4" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.745802, -0.092363, -0.659734, 0, 0.990342, -0.138648, 0.666168, 0.103404, 0.738598, -0.333084, 0.02554, 1.721221)
+indice = 4
+
+[node name="Diente5" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.96272, -0.037504, -0.267887, 0, 0.990342, -0.138648, 0.2705, 0.133479, 0.953422, -0.13525, 0.025007, 1.916448)
+indice = 5
+
+[node name="Diente6" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.962161, 0.037779, 0.26985, 0, 0.990342, -0.138648, -0.272482, 0.133402, 0.952868, 0.136241, 0.025009, 1.915945)
+indice = 6
+
+[node name="Diente7" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.744428, 0.092576, 0.661254, 0, 0.990342, -0.138648, -0.667703, 0.103213, 0.737238, 0.333851, 0.025543, 1.719985)
+indice = 7
+
+[node name="Diente8" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.45747, 0.123289, 0.880636, 0, 0.990342, -0.138648, -0.889225, 0.063427, 0.453052, 0.444612, 0.026036, 1.461723)
+indice = 8
+
+[node name="Diente9" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(0.14919, 0.137096, 0.979258, 0, 0.990342, -0.138648, -0.988809, 0.020685, 0.147749, 0.494404, 0.026301, 1.184271)
+indice = 9
+
+[node name="Diente10" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(-0.162568, 0.136803, 0.977168, 0, 0.990342, -0.138648, -0.986697, -0.02254, -0.160998, 0.493349, 0.026295, 0.903689)
+indice = 10
+
+[node name="Diente11" parent="Pose/Respiracion/Cabeza/Mandibula/Dientes" instance=ExtResource("11_diente")]
+transform = Transform3D(-0.469472, 0.122419, 0.87442, 0, 0.990342, -0.138648, -0.882948, -0.065091, -0.464937, 0.441474, 0.02602, 0.627476)
+indice = 11

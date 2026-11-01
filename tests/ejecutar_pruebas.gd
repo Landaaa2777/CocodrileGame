@@ -6,6 +6,7 @@ extends SceneTree
 const ARCHIVOS_DE_PRUEBA := [
 	"res://tests/test_reglas_juego.gd",
 	"res://tests/test_codigo_conexion.gd",
+	"res://tests/test_escena_cocodrilo.gd",
 ]
 
 
