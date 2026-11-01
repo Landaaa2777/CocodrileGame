@@ -1,0 +1,24 @@
+# Godot 4
+.godot/
+*.translation
+export_credentials.cfg
+
+# Builds locales
+build/
+*.apk
+*.aab
+*.idsig
+
+# Addon webrtc-native: se descarga con tools/instalar_webrtc.sh (binarios grandes)
+addons/webrtc/
+
+# Claves de firma: NUNCA al repositorio
+*.keystore
+*.jks
+
+# Herramientas
+tools/vista_previa/node_modules/
+tools/vista_previa/*.png
+__pycache__/
+*.pyc
+.DS_Store

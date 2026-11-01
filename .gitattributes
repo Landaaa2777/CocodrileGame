@@ -1,0 +1,9 @@
+# Normalizar finales de línea en texto
+* text=auto eol=lf
+
+# Binarios
+*.png binary
+*.wav binary
+*.jpg binary
+*.ttf binary
+*.otf binary
